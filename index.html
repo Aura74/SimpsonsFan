@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Springfield Fanzonen - The Simpsons</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="donut-spinner">
+      <div class="donut-body"></div>
+      <div class="donut-hole"></div>
+      <div class="donut-frosting"></div>
+    </div>
+    <p class="loader-text">Laddar Springfield...</p>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">SPRINGFIELD</a>
+      <button class="hamburger" id="hamburger" aria-label="Meny">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#hero">Hem</a></li>
+        <li><a href="#characters">Karaktarer</a></li>
+        <li><a href="#world">Springfield</a></li>
+        <li><a href="#episodes">Episoder</a></li>
+        <li><a href="#games">Spelen</a></li>
+        <li><a href="#quotes">Citat</a></li>
+        <li><a href="#trivia">Trivia</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero">
+    <div class="hero-clouds">
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="cloud cloud-4"></div>
+      <div class="cloud cloud-5"></div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="title-the">The</span>
+        <span class="title-simpsons">SIMPSONS</span>
+        <span class="title-fan">Fanzonen</span>
+      </h1>
+      <p class="hero-subtitle">Valkomna till Springfield - den gulaste staden i universum!</p>
+      <a href="#characters" class="hero-btn">Utforska Springfield</a>
+    </div>
+    <div class="springfield-skyline">
+      <div class="building building-1"></div>
+      <div class="building building-2"></div>
+      <div class="building building-3"></div>
+      <div class="building building-4"></div>
+      <div class="building building-5"></div>
+      <div class="building building-6"></div>
+      <div class="building building-7"></div>
+      <div class="building building-8"></div>
+      <div class="cooling-tower">
+        <div class="tower-body"></div>
+        <div class="tower-steam steam-1"></div>
+        <div class="tower-steam steam-2"></div>
+        <div class="tower-steam steam-3"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CHARACTERS -->
+  <section id="characters">
+    <div class="section-header">
+      <h2 class="section-title">Familjen & Vannerna</h2>
+      <p class="section-subtitle">Mots invonarna i Springfield</p>
+    </div>
+
+    <div class="character-carousel">
+      <div class="character-track">
+
+        <article class="character-card" data-character="homer">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar homer-avatar">
+                <div class="homer-head">
+                  <div class="homer-hair"></div>
+                  <div class="homer-eye left-eye"><div class="pupil"></div></div>
+                  <div class="homer-eye right-eye"><div class="pupil"></div></div>
+                  <div class="homer-nose"></div>
+                  <div class="homer-mouth"></div>
+                  <div class="homer-beard"></div>
+                </div>
+              </div>
+              <h3>Homer Simpson</h3>
+              <p class="character-role">Familjens overhuvud</p>
+            </div>
+            <div class="card-back">
+              <h3>Homer Jay Simpson</h3>
+              <p>Den olbalsande, munkalsande, karaftverksarbetande patriarken. Homer ar kand for sin karlek till Duff-ol, sin soffa och sitt ododoliga utrop "D'oh!". Trots sin lathet och sina brister alskar han sin familj over allt annat.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> 39</div>
+                <div class="stat"><span class="stat-label">Jobb:</span> Sakerhetsinspektor</div>
+                <div class="stat"><span class="stat-label">Favoritmat:</span> Munkar</div>
+                <div class="stat"><span class="stat-label">Catchphrase:</span> "D'oh!"</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="marge">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar marge-avatar">
+                <div class="marge-head">
+                  <div class="marge-hair"></div>
+                  <div class="marge-eye left-eye"><div class="pupil"></div></div>
+                  <div class="marge-eye right-eye"><div class="pupil"></div></div>
+                  <div class="marge-mouth"></div>
+                  <div class="marge-necklace"></div>
+                </div>
+              </div>
+              <h3>Marge Simpson</h3>
+              <p class="character-role">Familjens hjarta</p>
+            </div>
+            <div class="card-back">
+              <h3>Marjorie Bouvier Simpson</h3>
+              <p>Den talmodiga och karleksfulla modern som haller ihop familjen Simpson. Kand for sitt ikoniska bla tornhar och sin karakteristiska irriterade mumling. Marge ar den moraliska kompassen i hushallet.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> 36</div>
+                <div class="stat"><span class="stat-label">Jobb:</span> Hemmafru</div>
+                <div class="stat"><span class="stat-label">Signatur:</span> Bla tornhar</div>
+                <div class="stat"><span class="stat-label">Ljud:</span> *irriterad mumling*</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="bart">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar bart-avatar">
+                <div class="bart-head">
+                  <div class="bart-hair"></div>
+                  <div class="bart-eye left-eye"><div class="pupil"></div></div>
+                  <div class="bart-eye right-eye"><div class="pupil"></div></div>
+                  <div class="bart-mouth"></div>
+                </div>
+              </div>
+              <h3>Bart Simpson</h3>
+              <p class="character-role">Springfields busunge</p>
+            </div>
+            <div class="card-back">
+              <h3>Bartholomew JoJo Simpson</h3>
+              <p>Den tioarige rebellen och busungen som terroriserar Springfield Elementary. Bart ar kand for sina telefonskamt till Moe's Tavern, sin skateboard och sitt standiga sabotage. Under ytan gomner sig dock ett gott hjarta.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> 10</div>
+                <div class="stat"><span class="stat-label">Skola:</span> Springfield Elementary</div>
+                <div class="stat"><span class="stat-label">Hobby:</span> Skateboard</div>
+                <div class="stat"><span class="stat-label">Catchphrase:</span> "Eat my shorts!"</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="lisa">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar lisa-avatar">
+                <div class="lisa-head">
+                  <div class="lisa-hair"></div>
+                  <div class="lisa-eye left-eye"><div class="pupil"></div></div>
+                  <div class="lisa-eye right-eye"><div class="pupil"></div></div>
+                  <div class="lisa-mouth"></div>
+                  <div class="lisa-necklace"></div>
+                </div>
+              </div>
+              <h3>Lisa Simpson</h3>
+              <p class="character-role">Familjen genius</p>
+            </div>
+            <div class="card-back">
+              <h3>Lisa Marie Simpson</h3>
+              <p>Den attaariga geniet, saxofonisten och miljokampen. Lisa ar den mest intelligenta i familjen och kanner sig ofta malplacerad. Hon ar vegetarian, buddhist och kampar standigt for rattvisa i en orattvis varld.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> 8</div>
+                <div class="stat"><span class="stat-label">IQ:</span> 159</div>
+                <div class="stat"><span class="stat-label">Instrument:</span> Saxofon</div>
+                <div class="stat"><span class="stat-label">Passion:</span> Rattvisa</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="maggie">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar maggie-avatar">
+                <div class="maggie-head">
+                  <div class="maggie-hair"></div>
+                  <div class="maggie-eye left-eye"><div class="pupil"></div></div>
+                  <div class="maggie-eye right-eye"><div class="pupil"></div></div>
+                  <div class="maggie-pacifier"></div>
+                  <div class="maggie-bow"></div>
+                </div>
+              </div>
+              <h3>Maggie Simpson</h3>
+              <p class="character-role">Bebisen med hemligheter</p>
+            </div>
+            <div class="card-back">
+              <h3>Margaret Evelyn Simpson</h3>
+              <p>Den yngsta Simpson-medlemmen som kommunicerar genom att suga pa sin napp. Maggie ar overraskande kompetent - hon har skjutit Mr. Burns, raddad sin pappa fran gangstrar och visat tecken pa genialitet som overtraffar aven Lisa.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> 1</div>
+                <div class="stat"><span class="stat-label">Vapen:</span> Napp</div>
+                <div class="stat"><span class="stat-label">Fiende:</span> Den enogda bebisen</div>
+                <div class="stat"><span class="stat-label">Kostnad:</span> $847.63/scan</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="burns">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar burns-avatar">
+                <div class="burns-head">
+                  <div class="burns-eye left-eye"><div class="pupil"></div></div>
+                  <div class="burns-eye right-eye"><div class="pupil"></div></div>
+                  <div class="burns-nose"></div>
+                  <div class="burns-mouth"></div>
+                </div>
+              </div>
+              <h3>Mr. Burns</h3>
+              <p class="character-role">Springfields skurk</p>
+            </div>
+            <div class="card-back">
+              <h3>Charles Montgomery Burns</h3>
+              <p>Springfields rikaste och mest hatade invanare. Agare av karnkraftverket och Homers chef. Burns ar ofattbart gammal, otroligt ond och sa svag att en stark vind kan falla honom. "Excellent..."</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Alder:</span> ~104</div>
+                <div class="stat"><span class="stat-label">Formogenhet:</span> Miljarder</div>
+                <div class="stat"><span class="stat-label">Assistent:</span> Smithers</div>
+                <div class="stat"><span class="stat-label">Catchphrase:</span> "Excellent..."</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="krusty">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar krusty-avatar">
+                <div class="krusty-head">
+                  <div class="krusty-hair-left"></div>
+                  <div class="krusty-hair-right"></div>
+                  <div class="krusty-nose"></div>
+                  <div class="krusty-eye left-eye"><div class="pupil"></div></div>
+                  <div class="krusty-eye right-eye"><div class="pupil"></div></div>
+                  <div class="krusty-mouth"></div>
+                </div>
+              </div>
+              <h3>Krusty the Clown</h3>
+              <p class="character-role">Springfields underhallare</p>
+            </div>
+            <div class="card-back">
+              <h3>Herschel Shmoikel Krustofsky</h3>
+              <p>Springfields mest alsnade TV-clown som ar djupt olycklig bakom sminket. Krusty driver en massiv medieimperium av lagkvalitetsprodukter, ar beroende av allt mojligt och har en komplicerad relation med sin far, Rabbi Krustofsky.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Show:</span> The Krusty the Clown Show</div>
+                <div class="stat"><span class="stat-label">Sidekick:</span> Sideshow Mel</div>
+                <div class="stat"><span class="stat-label">Fan:</span> Bart Simpson</div>
+                <div class="stat"><span class="stat-label">Skatt:</span> Betalar inte</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="character-card" data-character="ned">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="character-avatar ned-avatar">
+                <div class="ned-head">
+                  <div class="ned-hair"></div>
+                  <div class="ned-mustache"></div>
+                  <div class="ned-eye left-eye"><div class="pupil"></div></div>
+                  <div class="ned-eye right-eye"><div class="pupil"></div></div>
+                  <div class="ned-glasses"></div>
+                  <div class="ned-mouth"></div>
+                </div>
+              </div>
+              <h3>Ned Flanders</h3>
+              <p class="character-role">Den perfekta grannen</p>
+            </div>
+            <div class="card-back">
+              <h3>Nedward "Ned" Flanders Jr.</h3>
+              <p>Homers overtrevliga, djupt religiosa granne. Ned ar Springfields mest moraliska invanare, agare av Leftorium (butik for vansterhanta) och pappa till Rod och Todd. Hans goda natur driver Homer till vansinne.</p>
+              <div class="character-stats">
+                <div class="stat"><span class="stat-label">Tro:</span> Mycket religiost kristen</div>
+                <div class="stat"><span class="stat-label">Butik:</span> Leftorium</div>
+                <div class="stat"><span class="stat-label">Catchphrase:</span> "Hi-diddly-ho!"</div>
+                <div class="stat"><span class="stat-label">Abs:</span> Otroligt valtranad</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-btn prev-btn" aria-label="Forsta">&larr;</button>
+      <div class="carousel-dots"></div>
+      <button class="carousel-btn next-btn" aria-label="Nasta">&rarr;</button>
+    </div>
+  </section>
+
+  <!-- SPRINGFIELD WORLD -->
+  <section id="world">
+    <div class="section-header">
+      <h2 class="section-title">Valkomna till Springfield</h2>
+      <p class="section-subtitle">Utforska stadens mest ikoniska platser</p>
+    </div>
+
+    <div class="locations-grid">
+      <div class="location-card" data-location="kwik-e-mart">
+        <div class="location-icon">
+          <div class="kwik-building">
+            <div class="kwik-roof"></div>
+            <div class="kwik-sign">KWIK-E-MART</div>
+            <div class="kwik-door"></div>
+          </div>
+        </div>
+        <h3>Kwik-E-Mart</h3>
+        <p>Apus livsmedelbutik dar du kan kopa Squishees, forodat kott och overprissatta varor. "Thank you, come again!"</p>
+      </div>
+
+      <div class="location-card" data-location="moes">
+        <div class="location-icon">
+          <div class="moes-building">
+            <div class="moes-sign">MOE'S</div>
+            <div class="moes-door"></div>
+            <div class="beer-mug"></div>
+          </div>
+        </div>
+        <h3>Moe's Tavern</h3>
+        <p>Springfields mest deprimerande bar, driven av den grumpige Moe Szyslak. Hem for Duff-ol, Flaming Moes och Barts telefonskamt.</p>
+      </div>
+
+      <div class="location-card" data-location="powerplant">
+        <div class="location-icon">
+          <div class="plant-building">
+            <div class="plant-tower"></div>
+            <div class="plant-steam"></div>
+            <div class="radiation-symbol">&#9762;</div>
+          </div>
+        </div>
+        <h3>Karnkraftverket</h3>
+        <p>Springfield Nuclear Power Plant - dar Homer "arbetar" som sakerhetsinspektor. Agent av Mr. Burns, orsak till stadens trefingade fiskar.</p>
+      </div>
+
+      <div class="location-card" data-location="school">
+        <div class="location-icon">
+          <div class="school-building">
+            <div class="school-bell"></div>
+            <div class="school-sign">ELEMENTARY</div>
+            <div class="school-door"></div>
+          </div>
+        </div>
+        <h3>Springfield Elementary</h3>
+        <p>Skolan dar Bart och Lisa gar. Med rektor Skinner, larare som Mrs. Krabappel och cafeteriamat som ingen vill veta vad det innehaller.</p>
+      </div>
+
+      <div class="location-card" data-location="android">
+        <div class="location-icon">
+          <div class="android-building">
+            <div class="android-sign">ANDROID'S DUNGEON</div>
+            <div class="comic-book"></div>
+          </div>
+        </div>
+        <h3>Android's Dungeon</h3>
+        <p>Comic Book Guys serietidningsbutik. "Worst. Episode. Ever." ar hans dom over allt som inte mater hans otroligt hoga standarder.</p>
+      </div>
+
+      <div class="location-card" data-location="742evergreen">
+        <div class="location-icon">
+          <div class="simpsons-house">
+            <div class="house-roof"></div>
+            <div class="house-body"></div>
+            <div class="house-door"></div>
+            <div class="house-window w1"></div>
+            <div class="house-window w2"></div>
+            <div class="house-garage"></div>
+          </div>
+        </div>
+        <h3>742 Evergreen Terrace</h3>
+        <p>Familjen Simpsons hem - dar kaos, karlek och D'oh! lever sida vid sida. Vardagsrummet med den ikoniska soffan ar seriens hjarta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST EPISODES -->
+  <section id="episodes">
+    <div class="section-header">
+      <h2 class="section-title">Legendariska Episoder</h2>
+      <p class="section-subtitle">De basta avsnitten genom tiderna</p>
+    </div>
+
+    <div class="episodes-timeline">
+      <div class="timeline-line"></div>
+
+      <div class="episode-item left">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 4, Avsnitt 12</div>
+          <h3>Marge vs. the Monorail</h3>
+          <p>En klassisk musikalnummerdriven episode dar en charimig bedragare overtygar Springfield att bygga en monorail. Skriven av Conan O'Brien - en absolut masterklass i komedi.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="year">1993</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="episode-item right">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 5, Avsnitt 2</div>
+          <h3>Cape Feare</h3>
+          <p>Sideshow Bob jagar Bart for att hamnas. En briljant parodi pa Martin Scorseses Cape Fear, med den ododoliga scenen dar Bob kliver pa krattor om och om igen.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="year">1993</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="episode-item left">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 6, Avsnitt 6</div>
+          <h3>Treehouse of Horror V</h3>
+          <p>En av de basta Halloween-specialerna nagonsin. Innehaller "The Shinning" (en genial parodi), "Time and Punishment" och "Nightmare Cafeteria". Ren komisk briljans.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="year">1994</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="episode-item right">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 8, Avsnitt 23</div>
+          <h3>Homer's Enemy</h3>
+          <p>Frank Grimes, en hardarbetande man, forsoker avsloja Homer som den inkompetenta idiot han ar - men alla alskar Homer anda. En morkt briljant satir over den amerikanska drommen.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="year">1997</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="episode-item left">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 8, Avsnitt 2</div>
+          <h3>You Only Move Twice</h3>
+          <p>Homer far dromjobbet hos den trevliga Hank Scorpio - som visar sig vara en Bond-skurk. En perfekt balans av hjarta och humor, med en av seriens basta bifigurer nagonsin.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="year">1996</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="episode-item right">
+        <div class="episode-content">
+          <div class="episode-season">Sasong 7, Avsnitt 24</div>
+          <h3>Homerpalooza</h3>
+          <p>Homer forsoker bevisa att han fortfarande ar cool genom att ga pa musikfestival. Han blir kanonkule-attraktion. Med gastframtradanden av Cypress Hill, Sonic Youth och Smashing Pumpkins.</p>
+          <div class="episode-rating">
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+            <span class="year">1996</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games">
+    <div class="section-header">
+      <h2 class="section-title">Simpsons Spelen</h2>
+      <p class="section-subtitle">Fran arkad till konsol - de basta Simpsons-spelen</p>
+    </div>
+
+    <div class="games-showcase">
+      <div class="game-card featured">
+        <div class="game-visual">
+          <div class="game-screen">
+            <div class="pixel-homer"></div>
+            <div class="pixel-road"></div>
+          </div>
+          <div class="game-badge">KLASSIKER</div>
+        </div>
+        <div class="game-info">
+          <h3>The Simpsons: Hit & Run</h3>
+          <span class="game-year">2003</span>
+          <p>Det ultimata Simpsons-spelet! Ofta kallat "Simpsons GTA" - ett oppet varldsspel dar du kor runt i Springfield, fullfolder uppdrag och forstort stan. Alskat av fans och anses vara ett av de basta licensierade spelen nagonsin.</p>
+          <div class="game-platforms">PS2 / Xbox / GameCube / PC</div>
+          <div class="game-rating-bar">
+            <div class="rating-fill" style="--rating: 92%"></div>
+            <span>9.2/10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="games-grid">
+        <div class="game-card mini">
+          <div class="game-mini-visual arcade-style"></div>
+          <h4>The Simpsons Arcade</h4>
+          <span class="game-year">1991</span>
+          <p>Konamis klassiska beat 'em up arkadspel. Valj Homer, Marge, Bart eller Lisa och sloss genom Springfield for att radda Maggie fran Smithers!</p>
+          <div class="game-platforms">Arkad</div>
+        </div>
+
+        <div class="game-card mini">
+          <div class="game-mini-visual road-rage-style"></div>
+          <h4>Road Rage</h4>
+          <span class="game-year">2001</span>
+          <p>Crazy Taxi men med Simpsons! Kor som dina favoritkaraktarer genom Springfield och skjutsa passagerare for pengar. Kaotiskt och roligt!</p>
+          <div class="game-platforms">PS2 / Xbox / GBA</div>
+        </div>
+
+        <div class="game-card mini">
+          <div class="game-mini-visual tapped-style"></div>
+          <h4>Tapped Out</h4>
+          <span class="game-year">2012</span>
+          <p>Homer forstort Springfield (igen) och det ar ditt jobb att bygga upp staden pa nytt! Ett populart mobilspel med standiga uppdateringar och events.</p>
+          <div class="game-platforms">iOS / Android</div>
+        </div>
+
+        <div class="game-card mini">
+          <div class="game-mini-visual virtual-style"></div>
+          <h4>Virtual Springfield</h4>
+          <span class="game-year">1997</span>
+          <p>Utforska Springfield i 360 grader! Ett unikt PC-spel dar du fritt kan vandra runt i staden och upptacka hemligheter, easter eggs och roliga detaljer.</p>
+          <div class="game-platforms">PC / Mac</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTES -->
+  <section id="quotes">
+    <div class="section-header">
+      <h2 class="section-title">Ododoliga Citat</h2>
+      <p class="section-subtitle">Visdom (och dumhet) fran Springfield</p>
+    </div>
+
+    <div class="quotes-carousel" id="quotes-carousel">
+      <div class="quote-card active">
+        <blockquote>
+          <p>"To alcohol! The cause of, and solution to, all of life's problems."</p>
+          <cite>- Homer Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"I'm not gonna lie to you, Marge. See ya later!"</p>
+          <cite>- Homer Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"Don't have a cow, man!"</p>
+          <cite>- Bart Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"I am so smart! S-M-R-T... I mean S-M-A-R-T!"</p>
+          <cite>- Homer Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"The lesson is: never try."</p>
+          <cite>- Homer Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"I didn't do it. Nobody saw me do it. You can't prove anything."</p>
+          <cite>- Bart Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"If something's hard to do, then it's not worth doing."</p>
+          <cite>- Homer Simpson</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"Excellent..."</p>
+          <cite>- Mr. Burns</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"Hi-diddly-ho, neighborinos!"</p>
+          <cite>- Ned Flanders</cite>
+        </blockquote>
+      </div>
+      <div class="quote-card">
+        <blockquote>
+          <p>"Me fail English? That's unpossible!"</p>
+          <cite>- Ralph Wiggum</cite>
+        </blockquote>
+      </div>
+    </div>
+    <div class="quote-nav">
+      <button class="quote-btn" id="prev-quote">&larr;</button>
+      <button class="quote-btn" id="next-quote">&rarr;</button>
+    </div>
+  </section>
+
+  <!-- TRIVIA -->
+  <section id="trivia">
+    <div class="section-header">
+      <h2 class="section-title">Visste du att...?</h2>
+      <p class="section-subtitle">Fascinerande fakta om The Simpsons</p>
+    </div>
+
+    <div class="trivia-grid">
+      <div class="trivia-card">
+        <div class="trivia-number">01</div>
+        <h4>Langsta serien nagonsin</h4>
+        <p>The Simpsons ar den langst pagaende amerikanska animerade primetime-serien och sitcom, med over 750 avsnitt sedan starten 1989.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">02</div>
+        <h4>Fyra fingrar</h4>
+        <p>Karaktarerna har bara fyra fingrar pa varje hand. Matt Groening valde detta for att det var lattare att animera och sag roligare ut.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">03</div>
+        <h4>Framtiden forutsagd</h4>
+        <p>Serien har "forutsagt" manga verkliga handelser, inklusive Disneys kop av Fox, smartklockor, autokorrigering och Trumps presidentskap.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">04</div>
+        <h4>Gul farg</h4>
+        <p>Matt Groening valde gult for karaktarerna for att de skulle sticka ut nar man zappade forbi. Han ville att tittarna omedelbart skulle kanna igen serien.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">05</div>
+        <h4>Springfield - var?</h4>
+        <p>Springfield ar medvetet aldrig placerat i nagon specifik delstat. Det finns over 30 platser som heter Springfield i USA, sa alla kan kanna att det ar "deras" stad.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">06</div>
+        <h4>Guldsondag</h4>
+        <p>Seriens forsta avsnitt som fullangd serie sandes den 17 december 1989. Innan dess var The Simpsons korta inslag i The Tracey Ullman Show sedan 1987.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">07</div>
+        <h4>D'oh! i ordboken</h4>
+        <p>Homers uttryck "D'oh!" lades till i Oxford English Dictionary ar 2001. Det definieras som ett utrop for frustration.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">08</div>
+        <h4>Couch Gag rekord</h4>
+        <p>Den langsta couch gag nagonsin varade over 2 minuter och skapades av graffitikonstnaren Banksy, som visade en mork bild av animationsindustrin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUCH GAG / INTERACTIVE -->
+  <section id="couch-gag">
+    <div class="section-header">
+      <h2 class="section-title">Sofffajansen</h2>
+      <p class="section-subtitle">Klicka for att se familjen springa till soffan!</p>
+    </div>
+    <div class="couch-scene">
+      <div class="living-room-bg">
+        <div class="lr-wall"></div>
+        <div class="lr-floor"></div>
+        <div class="lr-painting"></div>
+        <div class="lr-lamp"></div>
+      </div>
+      <div class="the-couch">
+        <div class="couch-back"></div>
+        <div class="couch-seat"></div>
+        <div class="couch-arm left-arm"></div>
+        <div class="couch-arm right-arm"></div>
+      </div>
+      <div class="couch-runners">
+        <div class="runner homer-runner" data-runner="homer"></div>
+        <div class="runner marge-runner" data-runner="marge"></div>
+        <div class="runner bart-runner" data-runner="bart"></div>
+        <div class="runner lisa-runner" data-runner="lisa"></div>
+        <div class="runner maggie-runner" data-runner="maggie"></div>
+      </div>
+      <button class="couch-btn" id="couch-btn">Starta Sofffajansen!</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-content">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h3>Springfield Fanzonen</h3>
+          <p>En fansida skapad med karlek for The Simpsons. Alla rattigheter tillhor 20th Century Fox / Disney.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Snabblankar</h4>
+          <ul>
+            <li><a href="#characters">Karaktarer</a></li>
+            <li><a href="#world">Springfield</a></li>
+            <li><a href="#episodes">Episoder</a></li>
+            <li><a href="#games">Spelen</a></li>
+          </ul>
+        </div>
+        <div class="footer-fun">
+          <h4>Homers visdom</h4>
+          <p class="footer-quote">"Operator! Give me the number for 911!"</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Springfield Fanzonen. Inte affilierad med Fox eller Disney. Skapad av fans, for fans.</p>
+        <div class="donut-footer">&#127849;</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

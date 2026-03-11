@@ -1,0 +1,1725 @@
+/* ============================================
+   THE SIMPSONS FANZONEN - STYLESHEET
+   ============================================ */
+
+/* --- VARIABLES --- */
+:root {
+  --simpsons-yellow: #FED41D;
+  --simpsons-yellow-dark: #E8B90A;
+  --simpsons-yellow-light: #FFF176;
+  --sky-blue: #70C1F5;
+  --sky-blue-dark: #4A90D9;
+  --marge-blue: #2980B9;
+  --marge-blue-dark: #1A5276;
+  --bart-orange: #F39C12;
+  --bart-red: #E74C3C;
+  --springfield-green: #27AE60;
+  --homer-white: #FDFEFE;
+  --homer-pants-blue: #5EA0D0;
+  --burns-purple: #8E44AD;
+  --donut-pink: #FF69B4;
+  --krusty-green: #1ABC9C;
+  --brown: #8B4513;
+  --brown-light: #D2691E;
+  --dark-bg: #1a1a2e;
+  --darker-bg: #0f0f1a;
+  --text-light: #FDFEFE;
+  --text-dark: #2C3E50;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --font-title: 'Bangers', cursive;
+  --font-handwritten: 'Permanent Marker', cursive;
+  --font-body: 'Comic Neue', cursive, sans-serif;
+}
+
+/* --- RESET & BASE --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--dark-bg);
+  color: var(--text-light);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--darker-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--simpsons-yellow);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--simpsons-yellow-dark);
+}
+
+/* --- LOADER --- */
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--simpsons-yellow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+#loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.donut-spinner {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  animation: donutSpin 1.2s ease-in-out infinite;
+}
+
+.donut-body {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--brown-light);
+}
+
+.donut-hole {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--simpsons-yellow);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.donut-frosting {
+  position: absolute;
+  width: 100px;
+  height: 55px;
+  border-radius: 50px 50px 30px 30px;
+  background: var(--donut-pink);
+  top: -2px;
+}
+
+.donut-frosting::before {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--simpsons-yellow);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -10%);
+}
+
+@keyframes donutSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.loader-text {
+  margin-top: 20px;
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  letter-spacing: 2px;
+}
+
+/* --- NAVIGATION --- */
+#main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9000;
+  padding: 15px 0;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+#main-nav.scrolled {
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 10px 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.nav-logo {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--simpsons-yellow);
+  text-decoration: none;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 0 var(--bart-orange);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--simpsons-yellow);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--simpsons-yellow);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: var(--simpsons-yellow);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 6px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -6px);
+}
+
+/* --- HERO --- */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--sky-blue) 0%, var(--sky-blue-dark) 50%, var(--springfield-green) 85%, #1B5E20 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-clouds .cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  width: 120px; height: 50px;
+  top: 10%; left: -150px;
+}
+.cloud-1::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+.cloud-1::after { width: 40px; height: 40px; top: -15px; left: 60px; }
+
+.cloud-2 {
+  width: 150px; height: 55px;
+  top: 18%; left: -200px;
+}
+.cloud-2::before { width: 70px; height: 70px; top: -35px; left: 30px; }
+.cloud-2::after { width: 50px; height: 50px; top: -20px; left: 80px; }
+
+.cloud-3 {
+  width: 100px; height: 40px;
+  top: 8%; right: -150px;
+}
+.cloud-3::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+.cloud-3::after { width: 35px; height: 35px; top: -12px; left: 50px; }
+
+.cloud-4 {
+  width: 130px; height: 48px;
+  top: 25%; right: -180px;
+}
+.cloud-4::before { width: 65px; height: 65px; top: -32px; left: 25px; }
+.cloud-4::after { width: 45px; height: 45px; top: -18px; left: 70px; }
+
+.cloud-5 {
+  width: 90px; height: 35px;
+  top: 15%; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+.cloud-5::before { width: 45px; height: 45px; top: -22px; left: 12px; }
+.cloud-5::after { width: 30px; height: 30px; top: -10px; left: 42px; }
+
+.hero-content {
+  text-align: center;
+  z-index: 10;
+  padding: 0 20px;
+}
+
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-the {
+  font-family: var(--font-body);
+  font-size: 2rem;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  opacity: 0;
+}
+
+.title-simpsons {
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 10vw, 8rem);
+  color: var(--simpsons-yellow);
+  text-shadow:
+    4px 4px 0 var(--bart-orange),
+    8px 8px 0 rgba(0,0,0,0.2);
+  letter-spacing: 5px;
+  line-height: 1;
+  opacity: 0;
+}
+
+.title-fan {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  margin-top: 10px;
+  opacity: 0;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  margin-bottom: 30px;
+  opacity: 0;
+}
+
+.hero-btn {
+  display: inline-block;
+  padding: 15px 40px;
+  background: var(--simpsons-yellow);
+  color: var(--text-dark);
+  text-decoration: none;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(254, 212, 29, 0.4);
+  opacity: 0;
+}
+
+.hero-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(254, 212, 29, 0.6);
+  background: var(--simpsons-yellow-light);
+}
+
+/* Springfield Skyline */
+.springfield-skyline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 20px;
+  z-index: 5;
+}
+
+.building {
+  background: #2C3E50;
+  border-radius: 3px 3px 0 0;
+  position: relative;
+  opacity: 0;
+}
+
+.building::before {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  top: 10px;
+  left: 20%;
+  border-radius: 2px;
+  box-shadow:
+    0 20px 0 rgba(255,255,255,0.1),
+    0 40px 0 rgba(255,255,255,0.1),
+    0 60px 0 rgba(255,255,255,0.1),
+    0 80px 0 rgba(255,255,255,0.1);
+}
+
+.building-1 { width: 60px; height: 120px; background: #34495E; }
+.building-2 { width: 45px; height: 180px; background: #2C3E50; }
+.building-3 { width: 80px; height: 100px; background: #5D6D7E; }
+.building-4 { width: 55px; height: 200px; background: #2E4053; }
+.building-5 { width: 70px; height: 140px; background: #34495E; }
+.building-6 { width: 50px; height: 160px; background: #283747; }
+.building-7 { width: 90px; height: 90px; background: #5D6D7E; }
+.building-8 { width: 65px; height: 170px; background: #2C3E50; }
+
+.cooling-tower {
+  position: relative;
+  margin-left: 20px;
+  opacity: 0;
+}
+
+.tower-body {
+  width: 70px;
+  height: 120px;
+  background: linear-gradient(to top, #7F8C8D 0%, #BDC3C7 50%, #7F8C8D 100%);
+  border-radius: 30px 30px 10px 10px;
+  clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%);
+}
+
+.tower-steam {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  top: -20px;
+}
+
+.steam-1 { left: 10px; animation: steamFloat 3s ease-in-out infinite; }
+.steam-2 { left: 25px; top: -35px; animation: steamFloat 3s ease-in-out infinite 0.5s; width: 25px; height: 25px; }
+.steam-3 { left: 15px; top: -50px; animation: steamFloat 3s ease-in-out infinite 1s; width: 20px; height: 20px; }
+
+@keyframes steamFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-15px) scale(1.3); opacity: 0.3; }
+}
+
+/* --- SECTION COMMON --- */
+section {
+  padding: 80px 20px;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-title {
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--simpsons-yellow);
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+
+/* --- CHARACTERS SECTION --- */
+#characters {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, #16213E 100%);
+  overflow: hidden;
+}
+
+.character-carousel {
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.character-track {
+  display: flex;
+  gap: 30px;
+  transition: transform 0.5s ease;
+  padding: 20px 0;
+}
+
+.character-card {
+  min-width: 280px;
+  max-width: 280px;
+  height: 420px;
+  perspective: 1000px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.character-card:hover .card-inner,
+.character-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  border: 2px solid rgba(254, 212, 29, 0.2);
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card-front h3 {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  color: var(--simpsons-yellow);
+  margin-top: 20px;
+  letter-spacing: 1px;
+}
+
+.character-role {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.card-back {
+  background: linear-gradient(145deg, var(--simpsons-yellow), var(--simpsons-yellow-dark));
+  color: var(--text-dark);
+  transform: rotateY(180deg);
+  justify-content: flex-start;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card-back h3 {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.card-back p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.character-stats {
+  width: 100%;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  font-size: 0.85rem;
+}
+
+.stat-label {
+  font-weight: 700;
+}
+
+/* Character CSS Avatars */
+.character-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Homer Avatar */
+.homer-avatar { background: radial-gradient(circle, var(--simpsons-yellow-light), var(--simpsons-yellow)); }
+.homer-head { position: relative; width: 100px; height: 100px; }
+.homer-hair { position: absolute; top: 5px; left: 30px; width: 45px; height: 8px; background: var(--text-dark); border-radius: 50%; }
+.homer-hair::before { content: ''; position: absolute; width: 6px; height: 12px; background: var(--text-dark); border-radius: 3px; left: 2px; top: -4px; }
+.homer-hair::after { content: ''; position: absolute; width: 6px; height: 12px; background: var(--text-dark); border-radius: 3px; left: 12px; top: -6px; }
+.homer-eye { position: absolute; width: 28px; height: 28px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.homer-eye .pupil { width: 8px; height: 8px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.homer-head .left-eye { top: 22px; left: 18px; }
+.homer-head .right-eye { top: 22px; left: 50px; }
+.homer-nose { position: absolute; width: 14px; height: 12px; background: var(--simpsons-yellow-dark); border-radius: 50%; top: 42px; left: 42px; }
+.homer-mouth { position: absolute; width: 30px; height: 12px; border-bottom: 3px solid var(--text-dark); border-radius: 0 0 15px 15px; top: 60px; left: 32px; }
+.homer-beard { position: absolute; width: 60px; height: 10px; background: #B8860B; border-radius: 0 0 30px 30px; top: 72px; left: 18px; opacity: 0.5; }
+
+/* Marge Avatar */
+.marge-avatar { background: radial-gradient(circle, var(--simpsons-yellow-light), var(--simpsons-yellow)); }
+.marge-head { position: relative; width: 100px; height: 120px; }
+.marge-hair { position: absolute; top: -35px; left: 20px; width: 50px; height: 70px; background: var(--marge-blue); border-radius: 25px 25px 5px 5px; }
+.marge-eye { position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.marge-eye .pupil { width: 7px; height: 7px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.marge-head .left-eye { top: 42px; left: 20px; }
+.marge-head .right-eye { top: 42px; left: 50px; }
+.marge-mouth { position: absolute; width: 15px; height: 8px; border-bottom: 2px solid var(--text-dark); border-radius: 0 0 10px 10px; top: 72px; left: 38px; }
+.marge-necklace { position: absolute; width: 40px; height: 8px; background: var(--bart-red); border-radius: 4px; top: 88px; left: 26px; }
+
+/* Bart Avatar */
+.bart-avatar { background: radial-gradient(circle, var(--simpsons-yellow-light), var(--simpsons-yellow)); }
+.bart-head { position: relative; width: 100px; height: 100px; }
+.bart-hair { position: absolute; top: 0; left: 15px; width: 60px; height: 25px; background: var(--simpsons-yellow-dark); }
+.bart-hair::before { content: ''; position: absolute; top: -15px; left: 0; width: 60px; height: 20px; background: var(--simpsons-yellow-dark); clip-path: polygon(0% 100%, 10% 0%, 20% 100%, 30% 0%, 40% 100%, 50% 0%, 60% 100%, 70% 0%, 80% 100%, 90% 0%, 100% 100%); }
+.bart-eye { position: absolute; width: 26px; height: 26px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.bart-eye .pupil { width: 7px; height: 7px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.bart-head .left-eye { top: 28px; left: 16px; }
+.bart-head .right-eye { top: 28px; left: 48px; }
+.bart-mouth { position: absolute; width: 25px; height: 10px; border-bottom: 3px solid var(--text-dark); border-radius: 0 0 12px 12px; top: 62px; left: 32px; }
+
+/* Lisa Avatar */
+.lisa-avatar { background: radial-gradient(circle, var(--simpsons-yellow-light), var(--simpsons-yellow)); }
+.lisa-head { position: relative; width: 100px; height: 100px; }
+.lisa-hair { position: absolute; top: -5px; left: 10px; width: 70px; height: 40px; background: var(--simpsons-yellow-dark); clip-path: polygon(50% 0%, 0% 100%, 15% 50%, 30% 100%, 45% 40%, 55% 100%, 70% 50%, 85% 100%, 100% 40%, 80% 100%, 60% 60%, 40% 100%, 20% 60%); }
+.lisa-eye { position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.lisa-eye .pupil { width: 6px; height: 6px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.lisa-head .left-eye { top: 35px; left: 20px; }
+.lisa-head .right-eye { top: 35px; left: 50px; }
+.lisa-mouth { position: absolute; width: 12px; height: 6px; border-bottom: 2px solid var(--text-dark); border-radius: 0 0 8px 8px; top: 65px; left: 40px; }
+.lisa-necklace { position: absolute; width: 30px; height: 6px; background: white; border-radius: 3px; top: 80px; left: 30px; }
+
+/* Maggie Avatar */
+.maggie-avatar { background: radial-gradient(circle, #E8F5E9, #A5D6A7); }
+.maggie-head { position: relative; width: 100px; height: 100px; }
+.maggie-hair { position: absolute; top: 5px; left: 20px; width: 55px; height: 20px; background: var(--simpsons-yellow-dark); border-radius: 50% 50% 0 0; }
+.maggie-eye { position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.maggie-eye .pupil { width: 7px; height: 7px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.maggie-head .left-eye { top: 30px; left: 18px; }
+.maggie-head .right-eye { top: 30px; left: 50px; }
+.maggie-pacifier { position: absolute; width: 18px; height: 14px; background: var(--bart-red); border-radius: 50%; top: 60px; left: 38px; }
+.maggie-pacifier::after { content: ''; position: absolute; width: 10px; height: 8px; background: var(--simpsons-yellow-light); border-radius: 50%; top: 2px; left: 4px; }
+.maggie-bow { position: absolute; width: 20px; height: 12px; background: var(--marge-blue); top: 5px; left: 55px; clip-path: polygon(50% 40%, 0% 0%, 20% 50%, 0% 100%, 50% 60%, 100% 100%, 80% 50%, 100% 0%); }
+
+/* Burns Avatar */
+.burns-avatar { background: radial-gradient(circle, #FDEBD0, #F5CBA7); }
+.burns-head { position: relative; width: 100px; height: 100px; }
+.burns-eye { position: absolute; width: 20px; height: 16px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.burns-eye .pupil { width: 5px; height: 5px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.burns-head .left-eye { top: 35px; left: 22px; }
+.burns-head .right-eye { top: 35px; left: 52px; }
+.burns-nose { position: absolute; width: 16px; height: 18px; background: #F5CBA7; border: 2px solid var(--text-dark); border-radius: 50% 50% 50% 50%; top: 45px; left: 40px; }
+.burns-mouth { position: absolute; width: 30px; height: 3px; background: var(--text-dark); top: 70px; left: 32px; border-radius: 2px; }
+
+/* Krusty Avatar */
+.krusty-avatar { background: radial-gradient(circle, #FDFEFE, #E8E8E8); }
+.krusty-head { position: relative; width: 100px; height: 100px; }
+.krusty-hair-left { position: absolute; width: 25px; height: 40px; background: var(--krusty-green); border-radius: 50% 0 0 50%; top: 15px; left: 5px; }
+.krusty-hair-right { position: absolute; width: 25px; height: 40px; background: var(--krusty-green); border-radius: 0 50% 50% 0; top: 15px; right: 10px; }
+.krusty-nose { position: absolute; width: 22px; height: 22px; background: var(--bart-red); border-radius: 50%; top: 40px; left: 36px; z-index: 2; }
+.krusty-eye { position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.krusty-eye .pupil { width: 6px; height: 6px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.krusty-head .left-eye { top: 30px; left: 18px; }
+.krusty-head .right-eye { top: 30px; left: 56px; }
+.krusty-mouth { position: absolute; width: 40px; height: 15px; background: var(--bart-red); border-radius: 0 0 20px 20px; top: 60px; left: 26px; }
+
+/* Ned Avatar */
+.ned-avatar { background: radial-gradient(circle, var(--simpsons-yellow-light), var(--simpsons-yellow)); }
+.ned-head { position: relative; width: 100px; height: 100px; }
+.ned-hair { position: absolute; top: 5px; left: 22px; width: 50px; height: 20px; background: #6D4C41; border-radius: 10px 10px 0 0; }
+.ned-mustache { position: absolute; top: 55px; left: 28px; width: 35px; height: 10px; background: #6D4C41; border-radius: 0 0 10px 10px; }
+.ned-eye { position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; border: 2px solid var(--text-dark); }
+.ned-eye .pupil { width: 6px; height: 6px; background: var(--text-dark); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.ned-head .left-eye { top: 30px; left: 18px; }
+.ned-head .right-eye { top: 30px; left: 52px; }
+.ned-glasses { position: absolute; top: 28px; left: 14px; width: 65px; height: 28px; border: 3px solid #5D4037; border-radius: 12px; background: transparent; }
+.ned-glasses::after { content: ''; position: absolute; width: 8px; height: 3px; background: #5D4037; top: 10px; left: 26px; }
+.ned-mouth { position: absolute; width: 18px; height: 10px; border-bottom: 2px solid var(--text-dark); border-radius: 0 0 10px 10px; top: 68px; left: 37px; }
+
+/* Carousel Controls */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.carousel-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--simpsons-yellow);
+  background: transparent;
+  color: var(--simpsons-yellow);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-btn:hover {
+  background: var(--simpsons-yellow);
+  color: var(--text-dark);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(254, 212, 29, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.carousel-dots .dot.active {
+  background: var(--simpsons-yellow);
+  transform: scale(1.2);
+}
+
+/* --- WORLD / LOCATIONS --- */
+#world {
+  background: linear-gradient(180deg, #16213E 0%, var(--dark-bg) 100%);
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.location-card {
+  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(254, 212, 29, 0.1);
+  transition: all 0.4s ease;
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+}
+
+.location-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(254, 212, 29, 0.05), transparent);
+  transition: left 0.6s ease;
+}
+
+.location-card:hover::before {
+  left: 100%;
+}
+
+.location-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(254, 212, 29, 0.3);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.location-icon {
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Simplified building icons */
+.kwik-building, .moes-building, .plant-building, .school-building, .android-building, .simpsons-house {
+  position: relative;
+  width: 80px;
+  height: 70px;
+}
+
+.kwik-building { background: #E67E22; border-radius: 5px 5px 0 0; }
+.kwik-roof { position: absolute; top: -15px; left: -5px; width: 90px; height: 20px; background: var(--bart-red); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.kwik-sign { position: absolute; top: 10px; left: 5px; font-family: var(--font-title); font-size: 0.55rem; color: white; background: var(--springfield-green); padding: 2px 5px; border-radius: 2px; }
+.kwik-door { position: absolute; bottom: 0; left: 30px; width: 20px; height: 30px; background: #784212; border-radius: 3px 3px 0 0; }
+
+.moes-building { background: #5D4037; border-radius: 3px 3px 0 0; }
+.moes-sign { position: absolute; top: 5px; left: 10px; font-family: var(--font-title); font-size: 0.65rem; color: var(--simpsons-yellow); }
+.moes-door { position: absolute; bottom: 0; left: 25px; width: 25px; height: 35px; background: #3E2723; border-radius: 3px 3px 0 0; }
+.beer-mug { position: absolute; top: -10px; right: 5px; width: 15px; height: 20px; background: var(--simpsons-yellow); border-radius: 3px; border: 2px solid var(--simpsons-yellow-dark); }
+.beer-mug::after { content: ''; position: absolute; right: -8px; top: 3px; width: 8px; height: 12px; border: 2px solid var(--simpsons-yellow-dark); border-left: none; border-radius: 0 5px 5px 0; }
+
+.plant-building { background: #7F8C8D; border-radius: 3px; }
+.plant-tower { position: absolute; left: 25px; bottom: 0; width: 30px; height: 60px; background: linear-gradient(#BDC3C7, #7F8C8D); clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); }
+.plant-steam { position: absolute; top: -5px; left: 33px; width: 15px; height: 15px; background: rgba(255,255,255,0.6); border-radius: 50%; animation: steamFloat 2s infinite; }
+.radiation-symbol { position: absolute; bottom: 10px; right: 10px; font-size: 1.5rem; color: var(--simpsons-yellow); }
+
+.school-building { background: #C0392B; border-radius: 3px 3px 0 0; }
+.school-bell { position: absolute; top: -12px; left: 30px; width: 20px; height: 15px; background: var(--simpsons-yellow); border-radius: 3px 3px 50% 50%; }
+.school-sign { position: absolute; top: 12px; left: 5px; font-family: var(--font-title); font-size: 0.45rem; color: white; letter-spacing: 1px; }
+.school-door { position: absolute; bottom: 0; left: 27px; width: 22px; height: 28px; background: #784212; border-radius: 3px 3px 0 0; }
+
+.android-building { background: #4A235A; border-radius: 3px 3px 0 0; }
+.android-sign { position: absolute; top: 8px; left: 2px; font-family: var(--font-title); font-size: 0.35rem; color: var(--simpsons-yellow); }
+.comic-book { position: absolute; bottom: 10px; right: 10px; width: 15px; height: 20px; background: var(--bart-red); border-radius: 2px; transform: rotate(-15deg); }
+.comic-book::after { content: ''; position: absolute; width: 15px; height: 20px; background: var(--marge-blue); border-radius: 2px; top: -3px; left: 3px; }
+
+.simpsons-house { background: transparent; }
+.house-roof { position: absolute; top: 0; left: -5px; width: 90px; height: 25px; background: #6D4C41; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.house-body { position: absolute; top: 25px; left: 0; width: 80px; height: 45px; background: #F5CBA7; }
+.house-door { position: absolute; bottom: 0; left: 32px; width: 16px; height: 25px; background: #6D4C41; border-radius: 3px 3px 0 0; }
+.house-window { position: absolute; width: 14px; height: 14px; background: #85C1E9; border: 2px solid #6D4C41; }
+.house-window.w1 { top: 30px; left: 8px; }
+.house-window.w2 { top: 30px; left: 56px; }
+.house-garage { position: absolute; bottom: 0; right: -2px; width: 25px; height: 30px; background: #D4AC6E; border-radius: 3px 3px 0 0; }
+
+.location-card h3 {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: var(--simpsons-yellow);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.location-card p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+}
+
+/* --- EPISODES TIMELINE --- */
+#episodes {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, #0D1B2A 100%);
+}
+
+.episodes-timeline {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--simpsons-yellow), var(--bart-orange), var(--simpsons-yellow));
+  transform: translateX(-50%);
+}
+
+.episode-item {
+  width: 45%;
+  padding: 20px;
+  position: relative;
+  opacity: 0;
+  margin-bottom: 40px;
+}
+
+.episode-item.left {
+  margin-right: auto;
+  text-align: right;
+}
+
+.episode-item.right {
+  margin-left: auto;
+  text-align: left;
+}
+
+.episode-item::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--simpsons-yellow);
+  border-radius: 50%;
+  top: 30px;
+  border: 3px solid var(--dark-bg);
+  z-index: 2;
+}
+
+.episode-item.left::before {
+  right: -32px;
+}
+
+.episode-item.right::before {
+  left: -32px;
+}
+
+.episode-content {
+  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid rgba(254, 212, 29, 0.15);
+  transition: all 0.3s;
+}
+
+.episode-content:hover {
+  border-color: rgba(254, 212, 29, 0.4);
+  transform: scale(1.02);
+}
+
+.episode-season {
+  font-size: 0.8rem;
+  color: var(--bart-orange);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.episode-content h3 {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  color: var(--simpsons-yellow);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.episode-content p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.episode-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stars {
+  color: var(--simpsons-yellow);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.year {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+}
+
+/* --- GAMES --- */
+#games {
+  background: linear-gradient(180deg, #0D1B2A 0%, var(--dark-bg) 50%, #16213E 100%);
+}
+
+.games-showcase {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.game-card.featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: linear-gradient(145deg, #1e2a4a, #0D1B2A);
+  border-radius: 25px;
+  padding: 40px;
+  margin-bottom: 40px;
+  border: 2px solid rgba(254, 212, 29, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-visual {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.game-screen {
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(180deg, var(--sky-blue) 0%, var(--springfield-green) 70%, #5D4E37 100%);
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid #333;
+}
+
+.pixel-homer {
+  position: absolute;
+  bottom: 35%;
+  left: 20%;
+  width: 40px;
+  height: 50px;
+  background: var(--simpsons-yellow);
+  border-radius: 20px 20px 5px 5px;
+  animation: pixelBounce 1s ease-in-out infinite;
+}
+
+.pixel-homer::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 14px 0 0 white;
+}
+
+.pixel-road {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: #5D4E37;
+}
+
+.pixel-road::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--simpsons-yellow) 0, var(--simpsons-yellow) 20px, transparent 20px, transparent 40px);
+}
+
+@keyframes pixelBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.game-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--bart-red);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+}
+
+.game-info h3 {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: var(--simpsons-yellow);
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.game-year {
+  font-size: 0.9rem;
+  color: var(--bart-orange);
+  font-weight: 700;
+}
+
+.game-info p {
+  margin: 15px 0;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+}
+
+.game-platforms {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.game-rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.game-rating-bar > div {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rating-fill {
+  height: 100%;
+  width: var(--rating);
+  background: linear-gradient(90deg, var(--simpsons-yellow), var(--bart-orange));
+  border-radius: 4px;
+  transition: width 1.5s ease;
+}
+
+.game-rating-bar span {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--simpsons-yellow);
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+.game-card.mini {
+  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid rgba(254, 212, 29, 0.1);
+  transition: all 0.4s;
+}
+
+.game-card.mini:hover {
+  transform: translateY(-5px);
+  border-color: rgba(254, 212, 29, 0.3);
+}
+
+.game-mini-visual {
+  height: 60px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.arcade-style {
+  background: linear-gradient(135deg, #8E44AD, #3498DB);
+  position: relative;
+  overflow: hidden;
+}
+
+.arcade-style::after {
+  content: 'INSERT COIN';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-title);
+  font-size: 0.6rem;
+  color: var(--simpsons-yellow);
+  letter-spacing: 2px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.road-rage-style {
+  background: linear-gradient(135deg, var(--bart-red), var(--bart-orange));
+}
+
+.tapped-style {
+  background: linear-gradient(135deg, var(--springfield-green), var(--krusty-green));
+}
+
+.virtual-style {
+  background: linear-gradient(135deg, var(--marge-blue), var(--burns-purple));
+}
+
+.game-card.mini h4 {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--simpsons-yellow);
+  letter-spacing: 1px;
+  margin-bottom: 3px;
+}
+
+.game-card.mini .game-year {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.game-card.mini p {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.game-card.mini .game-platforms {
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* --- QUOTES --- */
+#quotes {
+  background: var(--simpsons-yellow);
+  color: var(--text-dark);
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#quotes .section-title {
+  color: var(--text-dark);
+  text-shadow: 2px 2px 0 rgba(255,255,255,0.3);
+}
+
+#quotes .section-subtitle {
+  color: rgba(44, 62, 80, 0.6);
+}
+
+.quotes-carousel {
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quote-card {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.5s ease;
+  pointer-events: none;
+}
+
+.quote-card.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+.quote-card blockquote {
+  text-align: center;
+  padding: 30px;
+}
+
+.quote-card p {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  color: var(--text-dark);
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.quote-card cite {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: rgba(44, 62, 80, 0.7);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.quote-nav {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.quote-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid var(--text-dark);
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quote-btn:hover {
+  background: var(--text-dark);
+  color: var(--simpsons-yellow);
+}
+
+/* --- TRIVIA --- */
+#trivia {
+  background: linear-gradient(135deg, #16213E 0%, var(--dark-bg) 50%, #0D1B2A 100%);
+}
+
+.trivia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.trivia-card {
+  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  border-radius: 15px;
+  padding: 30px;
+  border: 1px solid rgba(254, 212, 29, 0.1);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.trivia-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(254, 212, 29, 0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.trivia-number {
+  font-family: var(--font-title);
+  font-size: 3rem;
+  color: rgba(254, 212, 29, 0.15);
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  line-height: 1;
+}
+
+.trivia-card h4 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--simpsons-yellow);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.trivia-card p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+}
+
+/* --- COUCH GAG --- */
+#couch-gag {
+  background: linear-gradient(135deg, #0D1B2A, var(--dark-bg));
+  padding-bottom: 100px;
+}
+
+.couch-scene {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.living-room-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.lr-wall {
+  width: 100%;
+  height: 65%;
+  background: linear-gradient(180deg, #E8B960, #D4A244);
+}
+
+.lr-floor {
+  width: 100%;
+  height: 35%;
+  background: linear-gradient(180deg, #8B6914, #6D5210);
+}
+
+.lr-painting {
+  position: absolute;
+  width: 80px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--sky-blue), var(--springfield-green));
+  border: 5px solid #6D4C41;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lr-lamp {
+  position: absolute;
+  bottom: 35%;
+  right: 10%;
+  width: 10px;
+  height: 80px;
+  background: #6D4C41;
+}
+
+.lr-lamp::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -15px;
+  width: 40px;
+  height: 25px;
+  background: var(--simpsons-yellow);
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  border-radius: 0 0 5px 5px;
+}
+
+.the-couch {
+  position: absolute;
+  bottom: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 80px;
+}
+
+.couch-back {
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  background: #2E86C1;
+  border-radius: 10px 10px 0 0;
+  top: 0;
+}
+
+.couch-seat {
+  position: absolute;
+  width: 100%;
+  height: 35px;
+  background: #2471A3;
+  border-radius: 0 0 5px 5px;
+  bottom: 0;
+}
+
+.couch-arm {
+  position: absolute;
+  width: 25px;
+  height: 60px;
+  background: #2E86C1;
+  bottom: 0;
+  border-radius: 8px;
+}
+
+.couch-arm.left-arm { left: -15px; }
+.couch-arm.right-arm { right: -15px; }
+
+.couch-runners {
+  position: absolute;
+  bottom: 40%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.runner {
+  width: 30px;
+  height: 45px;
+  border-radius: 15px 15px 5px 5px;
+  position: absolute;
+  left: -80px;
+  opacity: 0;
+  transition: none;
+}
+
+.homer-runner { background: var(--simpsons-yellow); z-index: 5; }
+.marge-runner { background: var(--marge-blue); z-index: 4; height: 55px; }
+.bart-runner { background: var(--bart-orange); z-index: 3; height: 35px; }
+.lisa-runner { background: var(--bart-red); z-index: 2; height: 32px; }
+.maggie-runner { background: var(--springfield-green); z-index: 1; height: 25px; }
+
+.couch-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 30px;
+  background: var(--simpsons-yellow);
+  color: var(--text-dark);
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.couch-btn:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 5px 20px rgba(254, 212, 29, 0.4);
+}
+
+/* --- FOOTER --- */
+#footer {
+  background: var(--darker-bg);
+  padding: 60px 20px 30px;
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand h3 {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  color: var(--simpsons-yellow);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.footer-brand p {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.footer-links h4 {
+  font-family: var(--font-title);
+  color: var(--simpsons-yellow);
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--simpsons-yellow);
+}
+
+.footer-fun h4 {
+  font-family: var(--font-title);
+  color: var(--simpsons-yellow);
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.footer-quote {
+  font-family: var(--font-handwritten);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer-bottom p {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.donut-footer {
+  font-size: 2rem;
+  animation: donutSpin 4s linear infinite;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 900px) {
+  .episodes-timeline {
+    padding-left: 20px;
+  }
+
+  .timeline-line {
+    left: 10px;
+  }
+
+  .episode-item {
+    width: 90%;
+    margin-left: 30px !important;
+    text-align: left !important;
+  }
+
+  .episode-item::before {
+    left: -25px !important;
+    right: auto !important;
+  }
+
+  .game-card.featured {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    max-width: 300px;
+    height: 100vh;
+    background: rgba(15, 15, 26, 0.98);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    transition: right 0.4s ease;
+    z-index: 8999;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
+  }
+
+  .character-card {
+    min-width: 250px;
+    max-width: 250px;
+    height: 380px;
+  }
+
+  .locations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .springfield-skyline {
+    height: 150px;
+  }
+
+  .building { transform: scale(0.7); transform-origin: bottom; }
+
+  .couch-scene {
+    height: 280px;
+  }
+
+  .the-couch {
+    width: 180px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 60px 15px;
+  }
+
+  .hero-btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+  }
+
+  .character-card {
+    min-width: 220px;
+    max-width: 220px;
+    height: 360px;
+  }
+
+  .trivia-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
