@@ -468,14 +468,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const couchCenter = document.querySelector('.the-couch').offsetLeft;
     const sceneWidth = document.querySelector('.couch-scene').offsetWidth;
 
+    const couchReveal = document.getElementById('couch-reveal');
+
     const tl = gsap.timeline({
       onComplete: () => {
         couchPlaying = false;
+        // Payoff: reveal the real "family on the couch" still
+        if (couchReveal) couchReveal.classList.add('show');
         // Reset after a pause
-        gsap.delayedCall(2, () => {
+        gsap.delayedCall(3, () => {
+          if (couchReveal) couchReveal.classList.remove('show');
           gsap.to(runners, {
             opacity: 0,
             duration: 0.5,
+            delay: 0.4,
             onComplete: () => {
               runners.forEach(r => {
                 gsap.set(r, { left: -80, opacity: 0, y: 0, scale: 1 });
@@ -685,9 +691,52 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // CURSOR TRAIL (Desktop only)
+  // THEME TOGGLE (dark / light, persisted)
   // ============================================
-  if (window.innerWidth > 768) {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      const next = isLight ? 'dark' : 'light';
+      if (next === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      // refresh scroll-triggered positions after the color transition
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  }
+
+  // ============================================
+  // GALLERY - SCROLL REVEAL
+  // ============================================
+  gsap.fromTo('.gallery-item',
+    { y: 50, opacity: 0, scale: 0.96 },
+    {
+      scrollTrigger: {
+        trigger: '#gallery',
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+        once: true
+      },
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      duration: 0.7,
+      stagger: 0.08,
+      ease: 'power2.out'
+    }
+  );
+
+  // ============================================
+  // CURSOR TRAIL (Desktop, motion-safe, non-lite only)
+  // ============================================
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isLiteMode = document.documentElement.getAttribute('data-perf') === 'lite';
+
+  if (window.innerWidth > 768 && !prefersReducedMotion && !isLiteMode) {
     let lastTrailTime = 0;
     document.addEventListener('mousemove', (e) => {
       const now = Date.now();
@@ -718,5 +767,39 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // ============================================
+  // RUNTIME FPS GUARD — auto-downgrade to Lite on
+  // weak GPUs (cores/memory checks alone miss them)
+  // ============================================
+  (function () {
+    const root = document.documentElement;
+    let stored;
+    try { stored = localStorage.getItem('simpsons:perfMode'); } catch (e) {}
+    // Only auto-measure when running in 'auto' (no explicit user choice) and not already lite
+    if (stored === 'lite' || stored === 'standard') return;
+    if (root.getAttribute('data-perf') === 'lite') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        let frames = 0;
+        const start = performance.now();
+        function tick(now) {
+          frames++;
+          if (now - start < 2500) {
+            requestAnimationFrame(tick);
+          } else {
+            const fps = (frames * 1000) / (now - start);
+            if (fps < 40) {
+              root.setAttribute('data-perf', 'lite');
+              try { localStorage.setItem('simpsons:perfMode', 'lite'); } catch (e) {}
+            }
+          }
+        }
+        requestAnimationFrame(tick);
+      }, 1500);
+    });
+  })();
 
 });

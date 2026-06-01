@@ -21,14 +21,53 @@
   --krusty-green: #1ABC9C;
   --brown: #8B4513;
   --brown-light: #D2691E;
-  --dark-bg: #1a1a2e;
-  --darker-bg: #0f0f1a;
-  --text-light: #FDFEFE;
   --text-dark: #2C3E50;
-  --shadow-color: rgba(0, 0, 0, 0.3);
   --font-title: 'Bangers', cursive;
   --font-handwritten: 'Permanent Marker', cursive;
-  --font-body: 'Comic Neue', cursive, sans-serif;
+  --font-body: 'Nunito', 'Comic Neue', system-ui, sans-serif;
+
+  /* === THEMED TOKENS (dark = default) === */
+  --dark-bg: #15182b;
+  --darker-bg: #0f0f1a;
+  --surface: #16213E;       /* card / section base */
+  --surface-2: #1e2a4a;     /* card gradient highlight */
+  --deep: #0d1b2a;          /* deepest section */
+  --text-light: #FDFEFE;    /* primary text */
+  --text-strong: rgba(255,255,255,0.85);
+  --text-soft: rgba(255,255,255,0.72);
+  --text-muted: rgba(255,255,255,0.55);
+  --text-faint: rgba(255,255,255,0.45);
+  --text-faintest: rgba(255,255,255,0.4);
+  --hairline: rgba(255,255,255,0.1);
+  --accent-soft: rgba(254,212,29,0.1);
+  --accent-mid: rgba(254,212,29,0.22);
+  --nav-bg: rgba(18,20,38,0.82);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  /* tinted multi-layer card shadow */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.28), 0 14px 36px rgba(8,10,24,0.45);
+  --shadow-card-hover: 0 2px 4px rgba(0,0,0,0.3), 0 22px 50px rgba(8,10,24,0.55), 0 0 0 1px var(--accent-mid);
+}
+
+/* === LIGHT THEME === */
+:root[data-theme="light"] {
+  --dark-bg: #fbf3df;
+  --darker-bg: #f2e7c9;
+  --surface: #fffdf7;
+  --surface-2: #ffffff;
+  --deep: #eaf2fb;
+  --text-light: #1f2733;
+  --text-strong: rgba(31,39,51,0.92);
+  --text-soft: rgba(31,39,51,0.78);
+  --text-muted: rgba(31,39,51,0.62);
+  --text-faint: rgba(31,39,51,0.52);
+  --text-faintest: rgba(31,39,51,0.48);
+  --hairline: rgba(31,39,51,0.12);
+  --accent-soft: rgba(232,185,10,0.12);
+  --accent-mid: rgba(232,185,10,0.3);
+  --nav-bg: rgba(255,251,240,0.85);
+  --shadow-color: rgba(120,90,20,0.18);
+  --shadow-card: 0 1px 2px rgba(120,90,20,0.06), 0 12px 30px rgba(180,150,80,0.14);
+  --shadow-card-hover: 0 2px 4px rgba(120,90,20,0.08), 0 20px 44px rgba(180,150,80,0.2), 0 0 0 1px var(--accent-mid);
 }
 
 /* --- RESET & BASE --- */
@@ -160,10 +199,11 @@ body {
 }
 
 #main-nav.scrolled {
-  background: rgba(26, 26, 46, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   padding: 10px 0;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 0 var(--hairline), 0 8px 30px var(--shadow-color);
 }
 
 .nav-inner {
@@ -316,6 +356,8 @@ body {
   text-align: center;
   z-index: 10;
   padding: 0 20px;
+  max-width: 680px;
+  width: 100%;
 }
 
 .hero-title {
@@ -355,11 +397,14 @@ body {
 }
 
 .hero-subtitle {
-  font-size: 1.2rem;
+  font-size: clamp(0.95rem, 3.6vw, 1.2rem);
   color: white;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
   margin-bottom: 30px;
   opacity: 0;
+  max-width: 36ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-btn {
@@ -410,15 +455,15 @@ body {
   position: absolute;
   width: 60%;
   height: 8px;
-  background: rgba(255,255,255,0.1);
+  background: var(--hairline);
   top: 10px;
   left: 20%;
   border-radius: 2px;
   box-shadow:
-    0 20px 0 rgba(255,255,255,0.1),
-    0 40px 0 rgba(255,255,255,0.1),
-    0 60px 0 rgba(255,255,255,0.1),
-    0 80px 0 rgba(255,255,255,0.1);
+    0 20px 0 var(--hairline),
+    0 40px 0 var(--hairline),
+    0 60px 0 var(--hairline),
+    0 80px 0 var(--hairline);
 }
 
 .building-1 { width: 60px; height: 120px; background: #34495E; }
@@ -449,7 +494,7 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.7);
+  background: var(--text-soft);
   top: -20px;
 }
 
@@ -484,13 +529,13 @@ section {
 
 .section-subtitle {
   font-size: 1.1rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-soft);
   font-weight: 400;
 }
 
 /* --- CHARACTERS SECTION --- */
 #characters {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, #16213E 100%);
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--surface) 100%);
   overflow: hidden;
 }
 
@@ -543,7 +588,7 @@ section {
 }
 
 .card-front {
-  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  background: linear-gradient(145deg, var(--surface-2), var(--surface));
   border: 2px solid rgba(254, 212, 29, 0.2);
   justify-content: center;
   text-align: center;
@@ -559,7 +604,7 @@ section {
 }
 
 .character-role {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin-top: 5px;
 }
@@ -757,7 +802,7 @@ section {
 
 /* --- WORLD / LOCATIONS --- */
 #world {
-  background: linear-gradient(180deg, #16213E 0%, var(--dark-bg) 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--dark-bg) 100%);
 }
 
 .locations-grid {
@@ -769,7 +814,7 @@ section {
 }
 
 .location-card {
-  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  background: linear-gradient(145deg, var(--surface-2), var(--surface));
   border-radius: 20px;
   padding: 30px;
   border: 1px solid rgba(254, 212, 29, 0.1);
@@ -829,7 +874,7 @@ section {
 
 .plant-building { background: #7F8C8D; border-radius: 3px; }
 .plant-tower { position: absolute; left: 25px; bottom: 0; width: 30px; height: 60px; background: linear-gradient(#BDC3C7, #7F8C8D); clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); }
-.plant-steam { position: absolute; top: -5px; left: 33px; width: 15px; height: 15px; background: rgba(255,255,255,0.6); border-radius: 50%; animation: steamFloat 2s infinite; }
+.plant-steam { position: absolute; top: -5px; left: 33px; width: 15px; height: 15px; background: var(--text-muted); border-radius: 50%; animation: steamFloat 2s infinite; }
 .radiation-symbol { position: absolute; bottom: 10px; right: 10px; font-size: 1.5rem; color: var(--simpsons-yellow); }
 
 .school-building { background: #C0392B; border-radius: 3px 3px 0 0; }
@@ -861,13 +906,13 @@ section {
 
 .location-card p {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-soft);
   line-height: 1.6;
 }
 
 /* --- EPISODES TIMELINE --- */
 #episodes {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, #0D1B2A 100%);
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--deep) 100%);
 }
 
 .episodes-timeline {
@@ -926,7 +971,7 @@ section {
 }
 
 .episode-content {
-  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  background: linear-gradient(145deg, var(--surface-2), var(--surface));
   padding: 25px;
   border-radius: 15px;
   border: 1px solid rgba(254, 212, 29, 0.15);
@@ -957,7 +1002,7 @@ section {
 
 .episode-content p {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-soft);
   line-height: 1.5;
   margin-bottom: 12px;
 }
@@ -976,13 +1021,13 @@ section {
 
 .year {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-faint);
   font-weight: 700;
 }
 
 /* --- GAMES --- */
 #games {
-  background: linear-gradient(180deg, #0D1B2A 0%, var(--dark-bg) 50%, #16213E 100%);
+  background: linear-gradient(180deg, var(--deep) 0%, var(--dark-bg) 50%, var(--surface) 100%);
 }
 
 .games-showcase {
@@ -994,7 +1039,7 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
-  background: linear-gradient(145deg, #1e2a4a, #0D1B2A);
+  background: linear-gradient(145deg, var(--surface-2), var(--deep));
   border-radius: 25px;
   padding: 40px;
   margin-bottom: 40px;
@@ -1095,13 +1140,13 @@ section {
 
 .game-info p {
   margin: 15px 0;
-  color: rgba(255,255,255,0.8);
+  color: var(--text-strong);
   line-height: 1.6;
 }
 
 .game-platforms {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-faint);
   font-weight: 700;
   letter-spacing: 1px;
   margin-bottom: 15px;
@@ -1116,7 +1161,7 @@ section {
 .game-rating-bar > div {
   flex: 1;
   height: 8px;
-  background: rgba(255,255,255,0.1);
+  background: var(--hairline);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1142,7 +1187,7 @@ section {
 }
 
 .game-card.mini {
-  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  background: linear-gradient(145deg, var(--surface-2), var(--surface));
   border-radius: 15px;
   padding: 25px;
   border: 1px solid rgba(254, 212, 29, 0.1);
@@ -1211,7 +1256,7 @@ section {
 
 .game-card.mini p {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
   line-height: 1.5;
   margin-bottom: 10px;
 }
@@ -1315,7 +1360,7 @@ section {
 
 /* --- TRIVIA --- */
 #trivia {
-  background: linear-gradient(135deg, #16213E 0%, var(--dark-bg) 50%, #0D1B2A 100%);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--dark-bg) 50%, var(--deep) 100%);
 }
 
 .trivia-grid {
@@ -1327,7 +1372,7 @@ section {
 }
 
 .trivia-card {
-  background: linear-gradient(145deg, #1e2a4a, #16213E);
+  background: linear-gradient(145deg, var(--surface-2), var(--surface));
   border-radius: 15px;
   padding: 30px;
   border: 1px solid rgba(254, 212, 29, 0.1);
@@ -1362,13 +1407,13 @@ section {
 
 .trivia-card p {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-soft);
   line-height: 1.6;
 }
 
 /* --- COUCH GAG --- */
 #couch-gag {
-  background: linear-gradient(135deg, #0D1B2A, var(--dark-bg));
+  background: linear-gradient(135deg, var(--deep), var(--dark-bg));
   padding-bottom: 100px;
 }
 
@@ -1545,7 +1590,7 @@ section {
 
 .footer-brand p {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-faint);
   line-height: 1.6;
 }
 
@@ -1565,7 +1610,7 @@ section {
 }
 
 .footer-links a {
-  color: rgba(255,255,255,0.5);
+  color: var(--text-faint);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s;
@@ -1585,12 +1630,12 @@ section {
 .footer-quote {
   font-family: var(--font-handwritten);
   font-size: 1rem;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
   font-style: italic;
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid var(--hairline);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -1601,7 +1646,7 @@ section {
 
 .footer-bottom p {
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.4);
+  color: var(--text-faintest);
 }
 
 .donut-footer {
@@ -1650,14 +1695,15 @@ section {
     width: 70%;
     max-width: 300px;
     height: 100vh;
-    background: rgba(15, 15, 26, 0.98);
+    background: var(--nav-bg);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 30px;
     transition: right 0.4s ease;
     z-index: 8999;
-    backdrop-filter: blur(10px);
   }
 
   .nav-links.open {
@@ -1704,6 +1750,8 @@ section {
     font-size: 1.1rem;
   }
 
+  .section-subtitle { font-size: 0.95rem; }
+
   .character-card {
     min-width: 220px;
     max-width: 220px;
@@ -1722,4 +1770,311 @@ section {
     flex-direction: column;
     text-align: center;
   }
+}
+
+/* ============================================
+   MODERNIZATION LAYER  (2026 upgrade)
+   Theme toggle · real images · gallery ·
+   tinted shadows · reduced-motion · perf
+   ============================================ */
+
+/* Smooth theme transition on color-bearing surfaces */
+body,
+#main-nav,
+.card-front, .card-back,
+.location-card, .episode-content, .game-card, .trivia-card,
+.gallery-item, #footer {
+  transition: background-color 0.4s ease, color 0.4s ease,
+              border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Consistent tinted, multi-layer card shadows (replaces flat black) */
+.card-front,
+.card-back { box-shadow: var(--shadow-card); }
+
+.location-card,
+.trivia-card,
+.game-card.mini { box-shadow: var(--shadow-card); }
+
+.location-card:hover,
+.trivia-card:hover,
+.game-card.mini:hover { box-shadow: var(--shadow-card-hover); }
+
+.game-card.featured { box-shadow: var(--shadow-card); }
+
+/* Card borders use themed hairline + accent so they read in light mode */
+.location-card,
+.trivia-card,
+.episode-content,
+.game-card.mini { border-color: var(--accent-soft); }
+
+/* Section subtitle eyebrow — editorial flanking lines */
+.section-subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.section-subtitle::before,
+.section-subtitle::after {
+  content: '';
+  width: clamp(1.4rem, 4vw, 2.4rem);
+  height: 2px;
+  background: var(--simpsons-yellow);
+  opacity: 0.55;
+  border-radius: 2px;
+}
+
+/* ---- THEME TOGGLE (floating) ---- */
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--simpsons-yellow);
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  color: var(--simpsons-yellow);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 22px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px) scale(1.06) rotate(-8deg);
+  box-shadow: 0 10px 28px rgba(254,212,29,0.35);
+}
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ---- REAL EPISODE THUMBNAILS ---- */
+.episode-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--sky-blue), var(--springfield-green));
+  border: 1px solid var(--accent-mid);
+}
+.episode-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(.2,.7,.2,1);
+}
+.episode-content:hover .episode-thumb img { transform: scale(1.04); }
+.episode-thumb::after {           /* subtle cinematic vignette */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.28));
+  pointer-events: none;
+}
+.episode-item.left .episode-content { text-align: left; }  /* image looks odd right-aligned */
+
+/* ---- GALLERY: "Springfield i bilder" ---- */
+#gallery { background: linear-gradient(180deg, var(--dark-bg) 0%, var(--deep) 100%); }
+.gallery-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 150px;
+  grid-auto-flow: dense;
+  gap: 16px;
+}
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--accent-soft);
+  box-shadow: var(--shadow-card);
+  background: linear-gradient(135deg, var(--surface-2), var(--surface));
+  cursor: pointer;
+}
+.gallery-item.wide { grid-column: span 2; }
+.gallery-item.tall { grid-row: span 2; }
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(.2,.7,.2,1), filter 0.4s ease;
+}
+.gallery-item figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 22px 14px 12px;
+  font-family: var(--font-title);
+  letter-spacing: 1px;
+  font-size: 0.95rem;
+  color: #fff;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72));
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.gallery-item:hover img { transform: scale(1.07); }
+.gallery-item:hover figcaption { transform: translateY(0); opacity: 1; }
+
+/* ---- REDUCED MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .character-card:hover .card-inner { transform: none; }
+}
+
+/* ---- LITE / LOW-END MODE (set by JS via data-perf="lite") ---- */
+:root[data-perf="lite"] .donut-footer,
+:root[data-perf="lite"] .tower-steam,
+:root[data-perf="lite"] .plant-steam,
+:root[data-perf="lite"] .arcade-style::after { animation: none !important; }
+:root[data-perf="lite"] #main-nav.scrolled,
+:root[data-perf="lite"] .theme-toggle,
+:root[data-perf="lite"] .nav-links {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root[data-perf="lite"] .location-card::before { display: none; }
+
+/* ---- GALLERY RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
+  .gallery-item.tall { grid-row: span 1; }
+  .theme-toggle { width: 46px; height: 46px; bottom: 16px; right: 16px; }
+}
+@media (max-width: 480px) {
+  .gallery-grid { gap: 10px; grid-auto-rows: 120px; }
+  .gallery-item.wide { grid-column: span 2; }
+}
+
+/* Footer credit link */
+.footer-bottom p a {
+  color: var(--simpsons-yellow);
+  text-decoration: none;
+  font-weight: 700;
+}
+.footer-bottom p a:hover { text-decoration: underline; }
+
+/* ============================================
+   REAL IMAGES v2 (characters, locations, games, couch)
+   ============================================ */
+
+/* FIX: quotes carousel collapsed to 0 width (covered the arrows) */
+.quotes-carousel { width: 100%; }
+
+/* --- Character real photos (front of card) --- */
+.char-photo {
+  width: 100%;
+  height: 170px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid var(--accent-mid);
+  background: linear-gradient(135deg, var(--surface-2), var(--surface));
+  box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+}
+.char-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.5s cubic-bezier(.2,.7,.2,1);
+}
+.character-card:hover .char-photo img { transform: scale(1.06); }
+/* Keep the CSS avatars (Maggie/Ned) the same height as photo cards for a tidy row */
+.card-front .character-avatar { margin-bottom: 14px; }
+
+/* --- Location real photos (replace CSS building icon) --- */
+.location-card .location-icon { display: none; }   /* hide old CSS building, keep markup */
+.location-photo {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  border: 1px solid var(--accent-soft);
+  background: linear-gradient(135deg, var(--sky-blue), var(--springfield-green));
+}
+.location-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.6s cubic-bezier(.2,.7,.2,1);
+}
+.location-card:hover .location-photo img { transform: scale(1.05); }
+
+/* --- Featured game real screenshot --- */
+.game-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.6s cubic-bezier(.2,.7,.2,1);
+}
+.game-card.featured:hover .game-screen img { transform: scale(1.04); }
+
+/* --- Mini game real thumbnail (driving games) --- */
+.game-mini-visual.has-photo { position: relative; overflow: hidden; }
+.game-mini-visual.has-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+
+/* --- Couch reveal image (the payoff after the gag) --- */
+.couch-reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(13,27,42,0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: opacity 0.6s ease;
+  z-index: 20;
+}
+.couch-reveal.show { opacity: 1; }
+.couch-reveal img {
+  max-width: 78%;
+  max-height: 80%;
+  border-radius: 12px;
+  border: 3px solid var(--simpsons-yellow);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  transform: scale(0.9) rotate(-2deg);
+  transition: transform 0.6s cubic-bezier(.2,.9,.3,1.2);
+}
+.couch-reveal.show img { transform: scale(1) rotate(0); }
+.couch-caption {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-handwritten);
+  color: var(--simpsons-yellow);
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .char-photo { height: 150px; }
+  .location-photo { height: 140px; }
 }

@@ -3,12 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Springfield Fanzonen - The Simpsons</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Springfield Fanzonen – En hyllning till The Simpsons</title>
+  <meta name="description" content="Springfield Fanzonen – en interaktiv svensk fansajt om The Simpsons: karaktärer, ikoniska platser, legendariska avsnitt, spel, citat och trivia.">
+
+  <!-- Set theme + performance mode BEFORE paint (no flash of wrong theme) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+        var perf = localStorage.getItem('simpsons:perfMode');
+        if (!perf) {
+          var lowEnd = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                       (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+                       (navigator.connection && navigator.connection.saveData);
+          perf = lowEnd ? 'lite' : 'auto';
+        }
+        if (perf === 'lite') document.documentElement.setAttribute('data-perf', 'lite');
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Donut favicon (inline SVG, zero requests) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%23D2691E'/><circle cx='50' cy='48' r='40' fill='%23FF69B4'/><circle cx='50' cy='50' r='14' fill='%23FED41D'/></svg>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- THEME TOGGLE -->
+  <button class="theme-toggle" id="theme-toggle" aria-label="Växla mörkt/ljust läge" title="Växla mörkt/ljust läge">
+    <span class="icon-moon" aria-hidden="true">🌙</span>
+    <span class="icon-sun" aria-hidden="true">☀️</span>
+  </button>
 
   <!-- LOADER -->
   <div id="loader">
@@ -29,8 +61,9 @@
       </button>
       <ul class="nav-links" id="nav-links">
         <li><a href="#hero">Hem</a></li>
-        <li><a href="#characters">Karaktarer</a></li>
+        <li><a href="#characters">Karaktärer</a></li>
         <li><a href="#world">Springfield</a></li>
+        <li><a href="#gallery">Galleri</a></li>
         <li><a href="#episodes">Episoder</a></li>
         <li><a href="#games">Spelen</a></li>
         <li><a href="#quotes">Citat</a></li>
@@ -54,7 +87,7 @@
         <span class="title-simpsons">SIMPSONS</span>
         <span class="title-fan">Fanzonen</span>
       </h1>
-      <p class="hero-subtitle">Valkomna till Springfield - den gulaste staden i universum!</p>
+      <p class="hero-subtitle">Välkomna till Springfield – den gulaste staden i universum!</p>
       <a href="#characters" class="hero-btn">Utforska Springfield</a>
     </div>
     <div class="springfield-skyline">
@@ -78,8 +111,8 @@
   <!-- CHARACTERS -->
   <section id="characters">
     <div class="section-header">
-      <h2 class="section-title">Familjen & Vannerna</h2>
-      <p class="section-subtitle">Mots invonarna i Springfield</p>
+      <h2 class="section-title">Familjen & Vännerna</h2>
+      <p class="section-subtitle">Möt invånarna i Springfield</p>
     </div>
 
     <div class="character-carousel">
@@ -88,25 +121,16 @@
         <article class="character-card" data-character="homer">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar homer-avatar">
-                <div class="homer-head">
-                  <div class="homer-hair"></div>
-                  <div class="homer-eye left-eye"><div class="pupil"></div></div>
-                  <div class="homer-eye right-eye"><div class="pupil"></div></div>
-                  <div class="homer-nose"></div>
-                  <div class="homer-mouth"></div>
-                  <div class="homer-beard"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/char-homer.jpg" alt="Homer Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Homer Simpson</h3>
-              <p class="character-role">Familjens overhuvud</p>
+              <p class="character-role">Familjens överhuvud</p>
             </div>
             <div class="card-back">
               <h3>Homer Jay Simpson</h3>
-              <p>Den olbalsande, munkalsande, karaftverksarbetande patriarken. Homer ar kand for sin karlek till Duff-ol, sin soffa och sitt ododoliga utrop "D'oh!". Trots sin lathet och sina brister alskar han sin familj over allt annat.</p>
+              <p>Den öldrickande, munkälskande, kärnkraftverksarbetande patriarken. Homer är känd för sin kärlek till Duff-öl, sin soffa och sitt odödliga utrop "D'oh!". Trots sin lättja och sina brister älskar han sin familj över allt annat.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> 39</div>
-                <div class="stat"><span class="stat-label">Jobb:</span> Sakerhetsinspektor</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> 39</div>
+                <div class="stat"><span class="stat-label">Jobb:</span> Säkerhetsinspektör</div>
                 <div class="stat"><span class="stat-label">Favoritmat:</span> Munkar</div>
                 <div class="stat"><span class="stat-label">Catchphrase:</span> "D'oh!"</div>
               </div>
@@ -117,25 +141,17 @@
         <article class="character-card" data-character="marge">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar marge-avatar">
-                <div class="marge-head">
-                  <div class="marge-hair"></div>
-                  <div class="marge-eye left-eye"><div class="pupil"></div></div>
-                  <div class="marge-eye right-eye"><div class="pupil"></div></div>
-                  <div class="marge-mouth"></div>
-                  <div class="marge-necklace"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/char-marge.jpg" alt="Marge Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Marge Simpson</h3>
-              <p class="character-role">Familjens hjarta</p>
+              <p class="character-role">Familjens hjärta</p>
             </div>
             <div class="card-back">
               <h3>Marjorie Bouvier Simpson</h3>
-              <p>Den talmodiga och karleksfulla modern som haller ihop familjen Simpson. Kand for sitt ikoniska bla tornhar och sin karakteristiska irriterade mumling. Marge ar den moraliska kompassen i hushallet.</p>
+              <p>Den tålmodiga och kärleksfulla modern som håller ihop familjen Simpson. Känd för sitt ikoniska blå tornhår och sin karakteristiska irriterade mumling. Marge är den moraliska kompassen i hushållet.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> 36</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> 36</div>
                 <div class="stat"><span class="stat-label">Jobb:</span> Hemmafru</div>
-                <div class="stat"><span class="stat-label">Signatur:</span> Bla tornhar</div>
+                <div class="stat"><span class="stat-label">Signatur:</span> Blå tornhår</div>
                 <div class="stat"><span class="stat-label">Ljud:</span> *irriterad mumling*</div>
               </div>
             </div>
@@ -145,22 +161,15 @@
         <article class="character-card" data-character="bart">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar bart-avatar">
-                <div class="bart-head">
-                  <div class="bart-hair"></div>
-                  <div class="bart-eye left-eye"><div class="pupil"></div></div>
-                  <div class="bart-eye right-eye"><div class="pupil"></div></div>
-                  <div class="bart-mouth"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/char-bart.jpg" alt="Bart Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Bart Simpson</h3>
               <p class="character-role">Springfields busunge</p>
             </div>
             <div class="card-back">
               <h3>Bartholomew JoJo Simpson</h3>
-              <p>Den tioarige rebellen och busungen som terroriserar Springfield Elementary. Bart ar kand for sina telefonskamt till Moe's Tavern, sin skateboard och sitt standiga sabotage. Under ytan gomner sig dock ett gott hjarta.</p>
+              <p>Den tioårige rebellen och busungen som terroriserar Springfield Elementary. Bart är känd för sina telefonskämt till Moe's Tavern, sin skateboard och sitt ständiga sabotage. Under ytan gömmer sig dock ett gott hjärta.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> 10</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> 10</div>
                 <div class="stat"><span class="stat-label">Skola:</span> Springfield Elementary</div>
                 <div class="stat"><span class="stat-label">Hobby:</span> Skateboard</div>
                 <div class="stat"><span class="stat-label">Catchphrase:</span> "Eat my shorts!"</div>
@@ -172,26 +181,18 @@
         <article class="character-card" data-character="lisa">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar lisa-avatar">
-                <div class="lisa-head">
-                  <div class="lisa-hair"></div>
-                  <div class="lisa-eye left-eye"><div class="pupil"></div></div>
-                  <div class="lisa-eye right-eye"><div class="pupil"></div></div>
-                  <div class="lisa-mouth"></div>
-                  <div class="lisa-necklace"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/gal-lisa-sax.jpg" alt="Lisa Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Lisa Simpson</h3>
-              <p class="character-role">Familjen genius</p>
+              <p class="character-role">Familjens geni</p>
             </div>
             <div class="card-back">
               <h3>Lisa Marie Simpson</h3>
-              <p>Den attaariga geniet, saxofonisten och miljokampen. Lisa ar den mest intelligenta i familjen och kanner sig ofta malplacerad. Hon ar vegetarian, buddhist och kampar standigt for rattvisa i en orattvis varld.</p>
+              <p>Den åttaåriga genin, saxofonisten och miljökämpen. Lisa är den mest intelligenta i familjen och känner sig ofta malplacerad. Hon är vegetarian, buddhist och kämpar ständigt för rättvisa i en orättvis värld.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> 8</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> 8</div>
                 <div class="stat"><span class="stat-label">IQ:</span> 159</div>
                 <div class="stat"><span class="stat-label">Instrument:</span> Saxofon</div>
-                <div class="stat"><span class="stat-label">Passion:</span> Rattvisa</div>
+                <div class="stat"><span class="stat-label">Passion:</span> Rättvisa</div>
               </div>
             </div>
           </div>
@@ -214,11 +215,11 @@
             </div>
             <div class="card-back">
               <h3>Margaret Evelyn Simpson</h3>
-              <p>Den yngsta Simpson-medlemmen som kommunicerar genom att suga pa sin napp. Maggie ar overraskande kompetent - hon har skjutit Mr. Burns, raddad sin pappa fran gangstrar och visat tecken pa genialitet som overtraffar aven Lisa.</p>
+              <p>Den yngsta Simpson-medlemmen som kommunicerar genom att suga på sin napp. Maggie är överraskande kompetent – hon har skjutit Mr. Burns, räddat sin pappa från gangstrar och visat tecken på genialitet som överträffar även Lisa.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> 1</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> 1</div>
                 <div class="stat"><span class="stat-label">Vapen:</span> Napp</div>
-                <div class="stat"><span class="stat-label">Fiende:</span> Den enogda bebisen</div>
+                <div class="stat"><span class="stat-label">Fiende:</span> Den enögda bebisen</div>
                 <div class="stat"><span class="stat-label">Kostnad:</span> $847.63/scan</div>
               </div>
             </div>
@@ -228,23 +229,16 @@
         <article class="character-card" data-character="burns">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar burns-avatar">
-                <div class="burns-head">
-                  <div class="burns-eye left-eye"><div class="pupil"></div></div>
-                  <div class="burns-eye right-eye"><div class="pupil"></div></div>
-                  <div class="burns-nose"></div>
-                  <div class="burns-mouth"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/gal-burns.jpg" alt="Mr. Burns" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Mr. Burns</h3>
               <p class="character-role">Springfields skurk</p>
             </div>
             <div class="card-back">
               <h3>Charles Montgomery Burns</h3>
-              <p>Springfields rikaste och mest hatade invanare. Agare av karnkraftverket och Homers chef. Burns ar ofattbart gammal, otroligt ond och sa svag att en stark vind kan falla honom. "Excellent..."</p>
+              <p>Springfields rikaste och mest hatade invånare. Ägare av kärnkraftverket och Homers chef. Burns är ofattbart gammal, otroligt ond och så svag att en stark vind kan fälla honom. "Excellent..."</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Alder:</span> ~104</div>
-                <div class="stat"><span class="stat-label">Formogenhet:</span> Miljarder</div>
+                <div class="stat"><span class="stat-label">Ålder:</span> ~104</div>
+                <div class="stat"><span class="stat-label">Förmögenhet:</span> Miljarder</div>
                 <div class="stat"><span class="stat-label">Assistent:</span> Smithers</div>
                 <div class="stat"><span class="stat-label">Catchphrase:</span> "Excellent..."</div>
               </div>
@@ -255,22 +249,13 @@
         <article class="character-card" data-character="krusty">
           <div class="card-inner">
             <div class="card-front">
-              <div class="character-avatar krusty-avatar">
-                <div class="krusty-head">
-                  <div class="krusty-hair-left"></div>
-                  <div class="krusty-hair-right"></div>
-                  <div class="krusty-nose"></div>
-                  <div class="krusty-eye left-eye"><div class="pupil"></div></div>
-                  <div class="krusty-eye right-eye"><div class="pupil"></div></div>
-                  <div class="krusty-mouth"></div>
-                </div>
-              </div>
+              <div class="char-photo"><img src="images/char-krusty.jpg" alt="Krusty the Clown" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
               <h3>Krusty the Clown</h3>
-              <p class="character-role">Springfields underhallare</p>
+              <p class="character-role">Springfields underhållare</p>
             </div>
             <div class="card-back">
               <h3>Herschel Shmoikel Krustofsky</h3>
-              <p>Springfields mest alsnade TV-clown som ar djupt olycklig bakom sminket. Krusty driver en massiv medieimperium av lagkvalitetsprodukter, ar beroende av allt mojligt och har en komplicerad relation med sin far, Rabbi Krustofsky.</p>
+              <p>Springfields mest älskade TV-clown som är djupt olycklig bakom sminket. Krusty driver ett massivt medieimperium av lågkvalitetsprodukter, är beroende av allt möjligt och har en komplicerad relation med sin far, Rabbi Krustofsky.</p>
               <div class="character-stats">
                 <div class="stat"><span class="stat-label">Show:</span> The Krusty the Clown Show</div>
                 <div class="stat"><span class="stat-label">Sidekick:</span> Sideshow Mel</div>
@@ -299,12 +284,12 @@
             </div>
             <div class="card-back">
               <h3>Nedward "Ned" Flanders Jr.</h3>
-              <p>Homers overtrevliga, djupt religiosa granne. Ned ar Springfields mest moraliska invanare, agare av Leftorium (butik for vansterhanta) och pappa till Rod och Todd. Hans goda natur driver Homer till vansinne.</p>
+              <p>Homers övertrevliga, djupt religiösa granne. Ned är Springfields mest moraliska invånare, ägare av Leftorium (butik för vänsterhänta) och pappa till Rod och Todd. Hans goda natur driver Homer till vansinne.</p>
               <div class="character-stats">
-                <div class="stat"><span class="stat-label">Tro:</span> Mycket religiost kristen</div>
+                <div class="stat"><span class="stat-label">Tro:</span> Mycket religiöst kristen</div>
                 <div class="stat"><span class="stat-label">Butik:</span> Leftorium</div>
                 <div class="stat"><span class="stat-label">Catchphrase:</span> "Hi-diddly-ho!"</div>
-                <div class="stat"><span class="stat-label">Abs:</span> Otroligt valtranad</div>
+                <div class="stat"><span class="stat-label">Abs:</span> Otroligt vältränad</div>
               </div>
             </div>
           </div>
@@ -314,21 +299,22 @@
     </div>
 
     <div class="carousel-controls">
-      <button class="carousel-btn prev-btn" aria-label="Forsta">&larr;</button>
+      <button class="carousel-btn prev-btn" aria-label="Första">&larr;</button>
       <div class="carousel-dots"></div>
-      <button class="carousel-btn next-btn" aria-label="Nasta">&rarr;</button>
+      <button class="carousel-btn next-btn" aria-label="Nästa">&rarr;</button>
     </div>
   </section>
 
   <!-- SPRINGFIELD WORLD -->
   <section id="world">
     <div class="section-header">
-      <h2 class="section-title">Valkomna till Springfield</h2>
+      <h2 class="section-title">Välkomna till Springfield</h2>
       <p class="section-subtitle">Utforska stadens mest ikoniska platser</p>
     </div>
 
     <div class="locations-grid">
       <div class="location-card" data-location="kwik-e-mart">
+        <div class="location-photo"><img src="images/loc-kwik.jpg" alt="Kwik-E-Mart" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="kwik-building">
             <div class="kwik-roof"></div>
@@ -337,10 +323,11 @@
           </div>
         </div>
         <h3>Kwik-E-Mart</h3>
-        <p>Apus livsmedelbutik dar du kan kopa Squishees, forodat kott och overprissatta varor. "Thank you, come again!"</p>
+        <p>Apus livsmedelsbutik där du kan köpa Squishees, förskämt kött och överprissatta varor. "Thank you, come again!"</p>
       </div>
 
       <div class="location-card" data-location="moes">
+        <div class="location-photo"><img src="images/loc-moes.jpg" alt="Moe's Tavern" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="moes-building">
             <div class="moes-sign">MOE'S</div>
@@ -349,10 +336,11 @@
           </div>
         </div>
         <h3>Moe's Tavern</h3>
-        <p>Springfields mest deprimerande bar, driven av den grumpige Moe Szyslak. Hem for Duff-ol, Flaming Moes och Barts telefonskamt.</p>
+        <p>Springfields mest deprimerande bar, driven av den vresige Moe Szyslak. Hem för Duff-öl, Flaming Moe's och Barts telefonskämt.</p>
       </div>
 
       <div class="location-card" data-location="powerplant">
+        <div class="location-photo"><img src="images/loc-plant.jpg" alt="Springfields kärnkraftverk" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="plant-building">
             <div class="plant-tower"></div>
@@ -361,10 +349,11 @@
           </div>
         </div>
         <h3>Karnkraftverket</h3>
-        <p>Springfield Nuclear Power Plant - dar Homer "arbetar" som sakerhetsinspektor. Agent av Mr. Burns, orsak till stadens trefingade fiskar.</p>
+        <p>Springfield Nuclear Power Plant – där Homer "arbetar" som säkerhetsinspektör. Ägs av Mr. Burns, orsak till stadens trefingrade fiskar.</p>
       </div>
 
       <div class="location-card" data-location="school">
+        <div class="location-photo"><img src="images/loc-school.jpg" alt="Springfield Elementary" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="school-building">
             <div class="school-bell"></div>
@@ -373,10 +362,11 @@
           </div>
         </div>
         <h3>Springfield Elementary</h3>
-        <p>Skolan dar Bart och Lisa gar. Med rektor Skinner, larare som Mrs. Krabappel och cafeteriamat som ingen vill veta vad det innehaller.</p>
+        <p>Skolan där Bart och Lisa går. Med rektor Skinner, lärare som Mrs. Krabappel och cafeteriamat som ingen vill veta vad den innehåller.</p>
       </div>
 
       <div class="location-card" data-location="android">
+        <div class="location-photo"><img src="images/loc-android.jpg" alt="Android's Dungeon" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="android-building">
             <div class="android-sign">ANDROID'S DUNGEON</div>
@@ -384,10 +374,11 @@
           </div>
         </div>
         <h3>Android's Dungeon</h3>
-        <p>Comic Book Guys serietidningsbutik. "Worst. Episode. Ever." ar hans dom over allt som inte mater hans otroligt hoga standarder.</p>
+        <p>Comic Book Guys serietidningsbutik. "Worst. Episode. Ever." är hans dom över allt som inte når upp till hans otroligt höga standard.</p>
       </div>
 
       <div class="location-card" data-location="742evergreen">
+        <div class="location-photo"><img src="images/loc-house.jpg" alt="742 Evergreen Terrace" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
         <div class="location-icon">
           <div class="simpsons-house">
             <div class="house-roof"></div>
@@ -399,8 +390,55 @@
           </div>
         </div>
         <h3>742 Evergreen Terrace</h3>
-        <p>Familjen Simpsons hem - dar kaos, karlek och D'oh! lever sida vid sida. Vardagsrummet med den ikoniska soffan ar seriens hjarta.</p>
+        <p>Familjen Simpsons hem – där kaos, kärlek och D'oh! lever sida vid sida. Vardagsrummet med den ikoniska soffan är seriens hjärta.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-header">
+      <h2 class="section-title">Springfield i bilder</h2>
+      <p class="section-subtitle">Ikoniska ögonblick rakt ur serien</p>
+    </div>
+
+    <div class="gallery-grid">
+      <figure class="gallery-item wide">
+        <img src="images/gal-house.jpg" alt="742 Evergreen Terrace" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>742 Evergreen Terrace</figcaption>
+      </figure>
+      <figure class="gallery-item tall">
+        <img src="images/gal-lisa-sax.jpg" alt="Lisa spelar saxofon" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Lisa &amp; saxofonen</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-moes.jpg" alt="Moe's Tavern" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Moe's Tavern</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-burns.jpg" alt="Mr. Burns" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Mr. Burns</figcaption>
+      </figure>
+      <figure class="gallery-item wide">
+        <img src="images/gal-android.jpg" alt="Radioactive Man i Android's Dungeon" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Android's Dungeon</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-school.jpg" alt="Springfield Elementary skolband" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Springfield Elementary</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-bart.jpg" alt="Bart i klassrummet" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Bart i skolan</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-burns-smithers.jpg" alt="Burns och Smithers" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Burns &amp; Smithers</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="images/gal-krusty.jpg" alt="Krusty the Clown" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
+        <figcaption>Krusty the Clown</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -408,7 +446,7 @@
   <section id="episodes">
     <div class="section-header">
       <h2 class="section-title">Legendariska Episoder</h2>
-      <p class="section-subtitle">De basta avsnitten genom tiderna</p>
+      <p class="section-subtitle">De bästa avsnitten genom tiderna</p>
     </div>
 
     <div class="episodes-timeline">
@@ -416,9 +454,10 @@
 
       <div class="episode-item left">
         <div class="episode-content">
-          <div class="episode-season">Sasong 4, Avsnitt 12</div>
+          <div class="episode-thumb"><img src="images/ep-monorail.jpg" alt="Scen ur Marge vs. the Monorail" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 4, Avsnitt 12</div>
           <h3>Marge vs. the Monorail</h3>
-          <p>En klassisk musikalnummerdriven episode dar en charimig bedragare overtygar Springfield att bygga en monorail. Skriven av Conan O'Brien - en absolut masterklass i komedi.</p>
+          <p>En klassisk musikalnummerdriven episod där en charmig bedragare övertygar Springfield att bygga en monorail. Skriven av Conan O'Brien – en absolut mästarklass i komedi.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span class="year">1993</span>
@@ -428,9 +467,10 @@
 
       <div class="episode-item right">
         <div class="episode-content">
-          <div class="episode-season">Sasong 5, Avsnitt 2</div>
+          <div class="episode-thumb"><img src="images/ep-capefeare.jpg" alt="Scen ur Cape Feare" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 5, Avsnitt 2</div>
           <h3>Cape Feare</h3>
-          <p>Sideshow Bob jagar Bart for att hamnas. En briljant parodi pa Martin Scorseses Cape Fear, med den ododoliga scenen dar Bob kliver pa krattor om och om igen.</p>
+          <p>Sideshow Bob jagar Bart för att hämnas. En briljant parodi på Martin Scorseses Cape Fear, med den odödliga scenen där Bob kliver på krattor om och om igen.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span class="year">1993</span>
@@ -440,9 +480,10 @@
 
       <div class="episode-item left">
         <div class="episode-content">
-          <div class="episode-season">Sasong 6, Avsnitt 6</div>
+          <div class="episode-thumb"><img src="images/ep-thoh.jpg" alt="Scen ur Treehouse of Horror V" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 6, Avsnitt 6</div>
           <h3>Treehouse of Horror V</h3>
-          <p>En av de basta Halloween-specialerna nagonsin. Innehaller "The Shinning" (en genial parodi), "Time and Punishment" och "Nightmare Cafeteria". Ren komisk briljans.</p>
+          <p>En av de bästa Halloween-specialerna någonsin. Innehåller "The Shinning" (en genial parodi), "Time and Punishment" och "Nightmare Cafeteria". Ren komisk briljans.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span class="year">1994</span>
@@ -452,9 +493,10 @@
 
       <div class="episode-item right">
         <div class="episode-content">
-          <div class="episode-season">Sasong 8, Avsnitt 23</div>
+          <div class="episode-thumb"><img src="images/ep-grimes.jpg" alt="Scen ur Homer's Enemy" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 8, Avsnitt 23</div>
           <h3>Homer's Enemy</h3>
-          <p>Frank Grimes, en hardarbetande man, forsoker avsloja Homer som den inkompetenta idiot han ar - men alla alskar Homer anda. En morkt briljant satir over den amerikanska drommen.</p>
+          <p>Frank Grimes, en hårt arbetande man, försöker avslöja Homer som den inkompetenta idiot han är – men alla älskar Homer ändå. En mörkt briljant satir över den amerikanska drömmen.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span class="year">1997</span>
@@ -464,9 +506,10 @@
 
       <div class="episode-item left">
         <div class="episode-content">
-          <div class="episode-season">Sasong 8, Avsnitt 2</div>
+          <div class="episode-thumb"><img src="images/ep-scorpio.jpg" alt="Scen ur You Only Move Twice" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 8, Avsnitt 2</div>
           <h3>You Only Move Twice</h3>
-          <p>Homer far dromjobbet hos den trevliga Hank Scorpio - som visar sig vara en Bond-skurk. En perfekt balans av hjarta och humor, med en av seriens basta bifigurer nagonsin.</p>
+          <p>Homer får drömjobbet hos den trevliga Hank Scorpio – som visar sig vara en Bond-skurk. En perfekt balans av hjärta och humor, med en av seriens bästa bifigurer någonsin.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span class="year">1996</span>
@@ -476,9 +519,10 @@
 
       <div class="episode-item right">
         <div class="episode-content">
-          <div class="episode-season">Sasong 7, Avsnitt 24</div>
+          <div class="episode-thumb"><img src="images/ep-homerpalooza.jpg" alt="Scen ur Homerpalooza" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
+          <div class="episode-season">Säsong 7, Avsnitt 24</div>
           <h3>Homerpalooza</h3>
-          <p>Homer forsoker bevisa att han fortfarande ar cool genom att ga pa musikfestival. Han blir kanonkule-attraktion. Med gastframtradanden av Cypress Hill, Sonic Youth och Smashing Pumpkins.</p>
+          <p>Homer försöker bevisa att han fortfarande är cool genom att gå på musikfestival. Han blir kanonkuls-attraktion. Med gästframträdanden av Cypress Hill, Sonic Youth och Smashing Pumpkins.</p>
           <div class="episode-rating">
             <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
             <span class="year">1996</span>
@@ -492,22 +536,21 @@
   <section id="games">
     <div class="section-header">
       <h2 class="section-title">Simpsons Spelen</h2>
-      <p class="section-subtitle">Fran arkad till konsol - de basta Simpsons-spelen</p>
+      <p class="section-subtitle">Från arkad till konsol – de bästa Simpsons-spelen</p>
     </div>
 
     <div class="games-showcase">
       <div class="game-card featured">
         <div class="game-visual">
           <div class="game-screen">
-            <div class="pixel-homer"></div>
-            <div class="pixel-road"></div>
+            <img src="images/game-hitrun.jpg" alt="Springfield-gata ur The Simpsons – Hit & Run-stil" loading="lazy" decoding="async" width="400" height="250" onerror="this.style.display='none'">
           </div>
           <div class="game-badge">KLASSIKER</div>
         </div>
         <div class="game-info">
           <h3>The Simpsons: Hit & Run</h3>
           <span class="game-year">2003</span>
-          <p>Det ultimata Simpsons-spelet! Ofta kallat "Simpsons GTA" - ett oppet varldsspel dar du kor runt i Springfield, fullfolder uppdrag och forstort stan. Alskat av fans och anses vara ett av de basta licensierade spelen nagonsin.</p>
+          <p>Det ultimata Simpsons-spelet! Ofta kallat "Simpsons GTA" – ett öppet världsspel där du kör runt i Springfield, gör uppdrag och förstör stan. Älskat av fans och anses vara ett av de bästa licensierade spelen någonsin.</p>
           <div class="game-platforms">PS2 / Xbox / GameCube / PC</div>
           <div class="game-rating-bar">
             <div class="rating-fill" style="--rating: 92%"></div>
@@ -521,7 +564,7 @@
           <div class="game-mini-visual arcade-style"></div>
           <h4>The Simpsons Arcade</h4>
           <span class="game-year">1991</span>
-          <p>Konamis klassiska beat 'em up arkadspel. Valj Homer, Marge, Bart eller Lisa och sloss genom Springfield for att radda Maggie fran Smithers!</p>
+          <p>Konamis klassiska beat 'em up-arkadspel. Välj Homer, Marge, Bart eller Lisa och slåss genom Springfield för att rädda Maggie från Smithers!</p>
           <div class="game-platforms">Arkad</div>
         </div>
 
@@ -529,7 +572,7 @@
           <div class="game-mini-visual road-rage-style"></div>
           <h4>Road Rage</h4>
           <span class="game-year">2001</span>
-          <p>Crazy Taxi men med Simpsons! Kor som dina favoritkaraktarer genom Springfield och skjutsa passagerare for pengar. Kaotiskt och roligt!</p>
+          <p>Crazy Taxi fast med Simpsons! Kör som dina favoritkaraktärer genom Springfield och skjutsa passagerare för pengar. Kaotiskt och roligt!</p>
           <div class="game-platforms">PS2 / Xbox / GBA</div>
         </div>
 
@@ -537,7 +580,7 @@
           <div class="game-mini-visual tapped-style"></div>
           <h4>Tapped Out</h4>
           <span class="game-year">2012</span>
-          <p>Homer forstort Springfield (igen) och det ar ditt jobb att bygga upp staden pa nytt! Ett populart mobilspel med standiga uppdateringar och events.</p>
+          <p>Homer förstörde Springfield (igen) och det är ditt jobb att bygga upp staden på nytt! Ett populärt mobilspel med ständiga uppdateringar och events.</p>
           <div class="game-platforms">iOS / Android</div>
         </div>
 
@@ -545,7 +588,7 @@
           <div class="game-mini-visual virtual-style"></div>
           <h4>Virtual Springfield</h4>
           <span class="game-year">1997</span>
-          <p>Utforska Springfield i 360 grader! Ett unikt PC-spel dar du fritt kan vandra runt i staden och upptacka hemligheter, easter eggs och roliga detaljer.</p>
+          <p>Utforska Springfield i 360 grader! Ett unikt PC-spel där du fritt kan vandra runt i staden och upptäcka hemligheter, easter eggs och roliga detaljer.</p>
           <div class="game-platforms">PC / Mac</div>
         </div>
       </div>
@@ -555,8 +598,8 @@
   <!-- QUOTES -->
   <section id="quotes">
     <div class="section-header">
-      <h2 class="section-title">Ododoliga Citat</h2>
-      <p class="section-subtitle">Visdom (och dumhet) fran Springfield</p>
+      <h2 class="section-title">Odödliga Citat</h2>
+      <p class="section-subtitle">Visdom (och dumhet) från Springfield</p>
     </div>
 
     <div class="quotes-carousel" id="quotes-carousel">
@@ -637,43 +680,48 @@
     <div class="trivia-grid">
       <div class="trivia-card">
         <div class="trivia-number">01</div>
-        <h4>Langsta serien nagonsin</h4>
-        <p>The Simpsons ar den langst pagaende amerikanska animerade primetime-serien och sitcom, med over 750 avsnitt sedan starten 1989.</p>
+        <h4>Längsta serien någonsin</h4>
+        <p>The Simpsons är den längst pågående amerikanska animerade primetime-serien och sitcom, med över 750 avsnitt sedan starten 1989.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">02</div>
         <h4>Fyra fingrar</h4>
-        <p>Karaktarerna har bara fyra fingrar pa varje hand. Matt Groening valde detta for att det var lattare att animera och sag roligare ut.</p>
+        <p>Karaktärerna har bara fyra fingrar på varje hand. Matt Groening valde detta för att det var lättare att animera och såg roligare ut.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">03</div>
-        <h4>Framtiden forutsagd</h4>
-        <p>Serien har "forutsagt" manga verkliga handelser, inklusive Disneys kop av Fox, smartklockor, autokorrigering och Trumps presidentskap.</p>
+        <h4>Framtiden förutspådd</h4>
+        <p>Serien har "förutspått" många verkliga händelser, inklusive Disneys köp av Fox, smartklockor, autokorrigering och Trumps presidentskap.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">04</div>
-        <h4>Gul farg</h4>
-        <p>Matt Groening valde gult for karaktarerna for att de skulle sticka ut nar man zappade forbi. Han ville att tittarna omedelbart skulle kanna igen serien.</p>
+        <h4>Gul färg</h4>
+        <p>Matt Groening valde gult för karaktärerna för att de skulle sticka ut när man zappade förbi. Han ville att tittarna omedelbart skulle känna igen serien.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">05</div>
-        <h4>Springfield - var?</h4>
-        <p>Springfield ar medvetet aldrig placerat i nagon specifik delstat. Det finns over 30 platser som heter Springfield i USA, sa alla kan kanna att det ar "deras" stad.</p>
+        <h4>Springfield – var?</h4>
+        <p>Springfield är medvetet aldrig placerat i någon specifik delstat. Det finns över 30 platser som heter Springfield i USA, så alla kan känna att det är "deras" stad.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">06</div>
-        <h4>Guldsondag</h4>
-        <p>Seriens forsta avsnitt som fullangd serie sandes den 17 december 1989. Innan dess var The Simpsons korta inslag i The Tracey Ullman Show sedan 1987.</p>
+        <h4>Guldsöndag</h4>
+        <p>Seriens första avsnitt som fullängdsserie sändes den 17 december 1989. Innan dess var The Simpsons korta inslag i The Tracey Ullman Show sedan 1987.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">07</div>
         <h4>D'oh! i ordboken</h4>
-        <p>Homers uttryck "D'oh!" lades till i Oxford English Dictionary ar 2001. Det definieras som ett utrop for frustration.</p>
+        <p>Homers uttryck "D'oh!" lades till i Oxford English Dictionary år 2001. Det definieras som ett utrop för frustration.</p>
       </div>
       <div class="trivia-card">
         <div class="trivia-number">08</div>
         <h4>Couch Gag rekord</h4>
-        <p>Den langsta couch gag nagonsin varade over 2 minuter och skapades av graffitikonstnaren Banksy, som visade en mork bild av animationsindustrin.</p>
+        <p>Den längsta couch gag någonsin varade över 2 minuter och skapades av graffitikonstnären Banksy, som visade en mörk bild av animationsindustrin.</p>
+      </div>
+      <div class="trivia-card">
+        <div class="trivia-number">09</div>
+        <h4>Flest gäststjärnor</h4>
+        <p>The Simpsons innehar Guinness-rekordet för flest gäststjärnor i en TV-serie – allt från Paul McCartney och Michael Jackson till Lady Gaga och Stephen Hawking har gästat Springfield.</p>
       </div>
     </div>
   </section>
@@ -681,8 +729,8 @@
   <!-- COUCH GAG / INTERACTIVE -->
   <section id="couch-gag">
     <div class="section-header">
-      <h2 class="section-title">Sofffajansen</h2>
-      <p class="section-subtitle">Klicka for att se familjen springa till soffan!</p>
+      <h2 class="section-title">Soffgaget</h2>
+      <p class="section-subtitle">Klicka för att se familjen springa till soffan!</p>
     </div>
     <div class="couch-scene">
       <div class="living-room-bg">
@@ -704,7 +752,11 @@
         <div class="runner lisa-runner" data-runner="lisa"></div>
         <div class="runner maggie-runner" data-runner="maggie"></div>
       </div>
-      <button class="couch-btn" id="couch-btn">Starta Sofffajansen!</button>
+      <div class="couch-reveal" id="couch-reveal">
+        <img src="images/couch-family.jpg" alt="Familjen Simpson samlad i soffan" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.couch-reveal').style.display='none'">
+        <span class="couch-caption">…och så är familjen samlad! 📺</span>
+      </div>
+      <button class="couch-btn" id="couch-btn">Starta soffgaget!</button>
     </div>
   </section>
 
@@ -714,12 +766,12 @@
       <div class="footer-top">
         <div class="footer-brand">
           <h3>Springfield Fanzonen</h3>
-          <p>En fansida skapad med karlek for The Simpsons. Alla rattigheter tillhor 20th Century Fox / Disney.</p>
+          <p>En fansida skapad med kärlek för The Simpsons. Alla rättigheter tillhör 20th Century Fox / Disney.</p>
         </div>
         <div class="footer-links">
-          <h4>Snabblankar</h4>
+          <h4>Snabblänkar</h4>
           <ul>
-            <li><a href="#characters">Karaktarer</a></li>
+            <li><a href="#characters">Karaktärer</a></li>
             <li><a href="#world">Springfield</a></li>
             <li><a href="#episodes">Episoder</a></li>
             <li><a href="#games">Spelen</a></li>
@@ -731,7 +783,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Springfield Fanzonen. Inte affilierad med Fox eller Disney. Skapad av fans, for fans.</p>
+        <p>&copy; 2026 Springfield Fanzonen. Inte affilierad med Fox eller Disney. Skapad av fans, för fans. Skärmbilder via <a href="https://frinkiac.com" target="_blank" rel="noopener">Frinkiac</a>.</p>
         <div class="donut-footer">&#127849;</div>
       </div>
     </div>
@@ -741,7 +793,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
