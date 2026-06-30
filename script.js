@@ -1,805 +1,612 @@
-/* ============================================
-   THE SIMPSONS FANZONEN - JAVASCRIPT
-   GSAP Animations & Interactivity
-   ============================================ */
+/* ============================================================
+   LYCKOKULAN — store logic (no backend, all localStorage)
+   ============================================================ */
+(function () {
+  'use strict';
 
-// Wait for DOM
-document.addEventListener('DOMContentLoaded', () => {
+  const NS = 'lyckokulan';
+  const FREE_SHIP = 499;
+  const kr = n => n.toLocaleString('sv-SE') + ' kr';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const store = {
+    get(k, fb) { try { return JSON.parse(localStorage.getItem(NS + ':' + k)) ?? fb; } catch (e) { return fb; } },
+    set(k, v) { try { localStorage.setItem(NS + ':' + k, JSON.stringify(v)); } catch (e) {} }
+  };
 
-  // Register GSAP plugins
-  gsap.registerPlugin(ScrollTrigger, TextPlugin);
+  /* ---------- PRODUCTS ---------- */
+  const PRODUCTS = [
+    { id: 'vanilj', name: 'Madagaskarvanilj', flavor: 'Krämig vanilj med äkta vaniljfrön', price: 69, img: 'images/prod-vanilj.jpg', cats: ['klassiker', 'bast'], rating: 4.9, reviews: 320, allergens: 'Mjölk, ägg', badges: [{ t: 'Bästsäljare', c: 'bast' }], pop: 98 },
+    { id: 'saltkola', name: 'Saltkola & Nougat', flavor: 'Len kola, rostad nougat, ett nyp havssalt', price: 75, img: 'images/prod-saltkola.jpg', cats: ['klassiker', 'bast'], rating: 4.9, reviews: 290, allergens: 'Mjölk, nötter', badges: [{ t: 'Bästsäljare', c: 'bast' }], pop: 96 },
+    { id: 'regnbage', name: 'Regnbåge', flavor: 'Barnens favorit – färg från riktig frukt & bär', price: 65, img: 'images/prod-regnbage.jpg', cats: ['barn', 'bast'], rating: 4.9, reviews: 310, allergens: 'Mjölk', badges: [{ t: 'Barnfavorit', c: 'barn' }, { t: 'Bästsäljare', c: 'bast' }], pop: 95 },
+    { id: 'cookies', name: 'Cookies & Cream', flavor: 'Vaniljkräm full av chokladkakbitar', price: 72, img: 'images/prod-cookies.jpg', cats: ['klassiker', 'bast'], rating: 4.8, reviews: 260, allergens: 'Mjölk, gluten, ägg', badges: [{ t: 'Bästsäljare', c: 'bast' }], pop: 92 },
+    { id: 'choklad', name: 'Chokladdröm', flavor: 'Mörk belgisk choklad, sammetslen', price: 72, img: 'images/prod-choklad.jpg', cats: ['klassiker'], rating: 4.8, reviews: 210, allergens: 'Mjölk', badges: [], pop: 88 },
+    { id: 'mynta', name: 'Mynta & Chokladflingor', flavor: 'Frisk mynta med knapriga chokladflingor', price: 69, img: 'images/prod-mynta.jpg', cats: ['klassiker'], rating: 4.7, reviews: 180, allergens: 'Mjölk', badges: [], pop: 80 },
+    { id: 'hallon', name: 'Hallon på pinne', flavor: 'Solmogna hallon – 6 pinnar, helt växtbaserat', price: 59, img: 'images/prod-hallon.jpg', cats: ['pinnglass', 'vegan'], rating: 4.8, reviews: 175, allergens: 'Inga', badges: [{ t: 'Vegansk', c: 'vegan' }, { t: 'Ny', c: 'ny' }], pop: 86 },
+    { id: 'blastjarna', name: 'Blå Stjärna', flavor: 'Blåbär & vanilj med stjärnströssel', price: 65, img: 'images/prod-blastjarna.jpg', cats: ['barn'], rating: 4.7, reviews: 150, allergens: 'Mjölk', badges: [{ t: 'Barnfavorit', c: 'barn' }], pop: 78 },
+    { id: 'stracciatella', name: 'Stracciatella', flavor: 'Italiensk gräddglass med chokladådror', price: 72, img: 'images/prod-stracciatella.jpg', cats: ['klassiker'], rating: 4.6, reviews: 140, allergens: 'Mjölk', badges: [], pop: 74 },
+    { id: 'blabar', name: 'Blåbär & Lavendel', flavor: 'Sorbet på vilda blåbär & en aning lavendel', price: 75, img: 'images/prod-blabar.jpg', cats: ['vegan'], rating: 4.7, reviews: 120, allergens: 'Inga', badges: [{ t: 'Vegansk', c: 'vegan' }, { t: 'Ny', c: 'ny' }], pop: 72 },
+    { id: 'mango', name: 'Mango-tango', flavor: 'Solmogen mango & passion – frisk vegansk sorbet', price: 69, img: 'images/prod-mango.jpg', cats: ['vegan', 'barn'], rating: 4.8, reviews: 165, allergens: 'Inga', badges: [{ t: 'Vegansk', c: 'vegan' }, { t: 'Ny', c: 'ny' }], pop: 84 },
+    { id: 'pistage', name: 'Pistage', flavor: 'Rostad Brontepistage – krämig & nötig', price: 79, img: 'images/prod-pistage.jpg', cats: ['klassiker'], rating: 4.8, reviews: 190, allergens: 'Mjölk, nötter', badges: [{ t: 'Ny', c: 'ny' }], pop: 83 }
+  ];
+  const byId = id => PRODUCTS.find(p => p.id === id);
+  const stars = r => '★★★★★'.slice(0, Math.round(r)) + '☆☆☆☆☆'.slice(0, 5 - Math.round(r));
 
-  // ============================================
-  // LOADER
-  // ============================================
-  window.addEventListener('load', () => {
-    gsap.to('#loader', {
-      opacity: 0,
-      duration: 0.6,
-      delay: 1.2,
-      onComplete: () => {
-        document.getElementById('loader').classList.add('hidden');
-        startHeroAnimations();
-      }
+  // pack variants (no backend — just price multipliers)
+  const VARIANTS = [
+    { key: '1', label: '1-pack', sub: '≈500 ml', mult: 1 },
+    { key: '4', label: '4-pack', sub: 'spara 10%', mult: 3.6 },
+    { key: 'tub', label: 'Familjetub', sub: '≈900 ml', mult: 1.6 }
+  ];
+  // plausible nutrition per 100 ml (sorbet/vegan = lätt, gräddglass = rikare)
+  function nutrition(p) {
+    const light = p.cats.includes('vegan');
+    return light
+      ? { energi: '132 kcal', fett: '0,3 g', kolhydrat: '31 g', socker: '28 g', protein: '0,5 g' }
+      : { energi: '212 kcal', fett: '12 g', kolhydrat: '22 g', socker: '20 g', protein: '3,6 g' };
+  }
+  const REVIEWS = [
+    ['Maria', 5, 'Mina barn ber om den varje fredag – och den är ekologisk!'],
+    ['Johan', 5, 'Krämigast jag ätit. Kom stenhård trots värmen.'],
+    ['Sara', 4, 'Underbar smak, lagom söt. Blir stammis.']
+  ];
+
+  /* ---------- STATE ---------- */
+  let cart = store.get('cart', []);
+  let wishlist = store.get('wishlist', []);
+  let discountCode = store.get('discount', '') || '';
+  const DISCOUNTS = { 'LYCKA10': 0.10 };
+  const discountRate = () => DISCOUNTS[discountCode] || 0;
+  const discountAmount = () => Math.round(cartTotal() * discountRate());
+  const payableTotal = () => cartTotal() - discountAmount();
+  let filter = 'alla';
+  let sort = 'pop';
+  let query = '';
+  let expanded = false;
+
+  /* ---------- PRODUCT GRID ---------- */
+  const grid = $('#product-grid');
+  const emptyMsg = $('#shop-empty');
+  const moreWrap = $('#shop-more-wrap');
+  const moreBtn = $('#shop-more');
+  const isMobile = () => window.matchMedia('(max-width: 680px)').matches;
+
+  function applyCollapse(count) {
+    const collapsible = isMobile() && count > 4;
+    moreWrap.classList.toggle('is-visible', collapsible);
+    grid.classList.toggle('is-collapsed', collapsible && !expanded);
+    if (collapsible) moreBtn.textContent = expanded ? 'Visa färre' : `Visa alla ${count} smaker`;
+  }
+  moreBtn.addEventListener('click', () => {
+    expanded = !expanded;
+    const count = $$('.card', grid).length;
+    grid.classList.toggle('is-collapsed', !expanded);
+    moreBtn.textContent = expanded ? 'Visa färre' : `Visa alla ${count} smaker`;
+    if (!expanded) document.getElementById('smaker').scrollIntoView({ behavior: 'smooth' });
+  });
+  window.addEventListener('resize', () => applyCollapse($$('.card', grid).length));
+
+  function cardHTML(p) {
+    const wished = wishlist.includes(p.id);
+    const badges = p.badges.map(b => `<span class="tag tag--${b.c}">${b.t}</span>`).join('');
+    return `<article class="card" data-id="${p.id}">
+      <div class="card__media">
+        <div class="card__badges">${badges}</div>
+        <button class="card__heart ${wished ? 'is-active' : ''}" data-act="wish" aria-label="Spara som favorit">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        </button>
+        <img src="${p.img}" alt="${p.name}" loading="lazy" decoding="async" width="400" height="400" onerror="this.style.opacity=.25">
+        <span class="card__brand"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 22 L24 44 L34 22 Z" fill="#E8B07A"/><circle cx="24" cy="19" r="13" fill="var(--hallon)"/><circle cx="16" cy="15" r="8" fill="var(--mynta)"/><circle cx="31" cy="16" r="7" fill="var(--lavender)"/></svg>Lyckokulan</span>
+        <button class="card__quick" data-act="quick">Snabbvy</button>
+      </div>
+      <div class="card__body">
+        <h3 class="card__name">${p.name}</h3>
+        <p class="card__flavor">${p.flavor}</p>
+        <p class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating.toFixed(1)} · ${p.reviews} omdömen</p>
+        <div class="card__foot">
+          <span class="card__price">${kr(p.price)} <small>/ förp.</small></span>
+          <button class="card__add" data-act="add" aria-label="Lägg ${p.name} i kundvagnen">+</button>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function renderGrid() {
+    let list = PRODUCTS.filter(p => {
+      const f = filter === 'alla' || p.cats.includes(filter);
+      const q = !query || (p.name + ' ' + p.flavor).toLowerCase().includes(query);
+      return f && q;
     });
+    if (sort === 'price-asc') list.sort((a, b) => a.price - b.price);
+    else if (sort === 'price-desc') list.sort((a, b) => b.price - a.price);
+    else if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+    else list.sort((a, b) => b.pop - a.pop);
+
+    grid.innerHTML = list.map(cardHTML).join('');
+    emptyMsg.hidden = list.length > 0;
+    expanded = false;
+    applyCollapse(list.length);
+  }
+
+  grid.addEventListener('click', e => {
+    const card = e.target.closest('.card'); if (!card) return;
+    const id = card.dataset.id;
+    const act = e.target.closest('[data-act]')?.dataset.act;
+    if (act === 'add') { flyToCart($('img', card)); addToCart(id); }
+    else if (act === 'wish') toggleWish(id, e.target.closest('.card__heart'));
+    else if (act === 'quick') openQuick(id);
+    else if (e.target.closest('.card__media') || e.target.closest('.card__name')) openQuick(id);
   });
 
-  // Fallback: hide loader after 4 seconds max
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if (!loader.classList.contains('hidden')) {
-      loader.classList.add('hidden');
-      startHeroAnimations();
+  /* filters / sort / search */
+  $('#filters').addEventListener('click', e => {
+    const c = e.target.closest('.chip'); if (!c) return;
+    $$('.chip', $('#filters')).forEach(x => x.classList.remove('is-active'));
+    c.classList.add('is-active');
+    filter = c.dataset.filter; renderGrid();
+  });
+  $('#sort').addEventListener('change', e => { sort = e.target.value; renderGrid(); });
+  $('#shop-search').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); renderGrid(); });
+
+  /* ---------- CART ---------- */
+  const cartDrawer = $('#cart-drawer');
+  function saveCart() { store.set('cart', cart); renderCart(); updateCounts(); }
+  function cartQty() { return cart.reduce((s, i) => s + i.qty, 0); }
+  function cartTotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+
+  function addToCart(id, opts) {
+    const p = byId(id);
+    const item = opts || (p && { id: p.id, name: p.name, img: p.img, price: p.price, meta: '1 förpackning' });
+    if (!item) return;
+    const existing = cart.find(i => i.id === item.id && i.meta === item.meta);
+    if (existing) existing.qty += (item.qty || 1);
+    else cart.push({ ...item, qty: item.qty || 1 });
+    saveCart();
+    toast('🛒 Tillagd i kundvagnen');
+    bump($('#cart-btn'));
+  }
+  function setQty(idx, d) {
+    cart[idx].qty += d;
+    if (cart[idx].qty <= 0) cart.splice(idx, 1);
+    saveCart();
+  }
+  function removeItem(idx) { cart.splice(idx, 1); saveCart(); toast('Borttagen'); }
+
+  function renderCart() {
+    cartDrawer.classList.toggle('is-empty', cart.length === 0);
+    const body = $('#cart-items');
+    body.innerHTML = cart.map((i, idx) => `<div class="line">
+      <img src="${i.img}" alt="${i.name}" onerror="this.style.visibility='hidden'">
+      <div class="line__info">
+        <div class="line__name">${i.name}</div>
+        <div class="line__meta">${i.meta || ''}</div>
+        <div class="qty">
+          <button data-q="-1" data-i="${idx}" aria-label="Minska">−</button>
+          <span>${i.qty}</span>
+          <button data-q="1" data-i="${idx}" aria-label="Öka">+</button>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="line__price">${kr(i.price * i.qty)}</div>
+        <button class="line__remove" data-rm="${idx}">Ta bort</button>
+      </div>
+    </div>`).join('');
+    const items = cartTotal(), disc = discountAmount();
+    const dl = $('#discount-line');
+    if (dl) { dl.hidden = disc === 0; $('#discount-label').textContent = 'Rabatt (' + discountCode + ')'; $('#discount-amt').textContent = '−' + kr(disc); }
+    const di = $('#discount-input'); if (di && discountCode && di.value.toUpperCase() !== discountCode) di.value = discountCode;
+    $('#cart-subtotal').textContent = kr(payableTotal());
+
+    const pct = Math.min(100, (items / FREE_SHIP) * 100);
+    $('#ship-fill').style.width = pct + '%';
+    $('#ship-text').innerHTML = items >= FREE_SHIP
+      ? '🎉 Du har <strong>fri frakt!</strong>'
+      : `Handla för <strong>${kr(FREE_SHIP - items)}</strong> till för fri frakt`;
+  }
+  /* discount code */
+  function applyDiscount() {
+    const code = ($('#discount-input').value || '').trim().toUpperCase();
+    if (DISCOUNTS[code]) { discountCode = code; store.set('discount', code); toast('🎉 ' + Math.round(DISCOUNTS[code] * 100) + '% rabatt tillagd!'); }
+    else { discountCode = ''; store.set('discount', ''); toast('🤔 Ogiltig kod – prova LYCKA10'); }
+    renderCart();
+  }
+  $('#discount-apply').addEventListener('click', applyDiscount);
+  $('#discount-input').addEventListener('keydown', e => { if (e.key === 'Enter') applyDiscount(); });
+  $('#cart-items').addEventListener('click', e => {
+    const q = e.target.closest('[data-q]'); const rm = e.target.closest('[data-rm]');
+    if (q) setQty(+q.dataset.i, +q.dataset.q);
+    if (rm) removeItem(+rm.dataset.rm);
+  });
+
+  /* ---------- WISHLIST ---------- */
+  const wishDrawer = $('#wishlist-drawer');
+  function toggleWish(id, btn) {
+    const i = wishlist.indexOf(id);
+    if (i >= 0) { wishlist.splice(i, 1); btn && btn.classList.remove('is-active'); toast('💔 Borttagen från favoriter'); }
+    else { wishlist.push(id); btn && btn.classList.add('is-active'); toast('💛 Sparad som favorit'); bump($('#wishlist-btn')); }
+    store.set('wishlist', wishlist); updateCounts(); renderWish();
+  }
+  function renderWish() {
+    wishDrawer.classList.toggle('is-empty', wishlist.length === 0);
+    $('#wishlist-items').innerHTML = wishlist.map(id => {
+      const p = byId(id); if (!p) return '';
+      return `<div class="line">
+        <img src="${p.img}" alt="${p.name}">
+        <div class="line__info"><div class="line__name">${p.name}</div><div class="line__meta">${kr(p.price)}</div></div>
+        <div style="display:flex;flex-direction:column;gap:.3rem">
+          <button class="btn btn--primary btn--sm" data-wadd="${id}">Köp</button>
+          <button class="line__remove" data-wrm="${id}">Ta bort</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  $('#wishlist-items').addEventListener('click', e => {
+    const a = e.target.closest('[data-wadd]'); const r = e.target.closest('[data-wrm]');
+    if (a) addToCart(a.dataset.wadd);
+    if (r) { toggleWish(r.dataset.wrm); syncHearts(); }
+  });
+  function syncHearts() { $$('.card').forEach(c => $('.card__heart', c)?.classList.toggle('is-active', wishlist.includes(c.dataset.id))); }
+
+  /* ---------- COUNTS ---------- */
+  function updateCounts() {
+    const cc = $('#cart-count'), wc = $('#wishlist-count');
+    const cq = cartQty(), wq = wishlist.length;
+    cc.textContent = cq; cc.hidden = cq === 0;
+    wc.textContent = wq; wc.hidden = wq === 0;
+  }
+
+  /* ---------- QUICK VIEW ---------- */
+  const qv = $('#quickview');
+  let pdp = { id: null, variant: '1', qty: 1 };
+  const pdpPrice = p => Math.round(p.price * VARIANTS.find(v => v.key === pdp.variant).mult);
+
+  function renderPDP() {
+    const p = byId(pdp.id); if (!p) return;
+    const n = nutrition(p);
+    const thumbs = [p.img, 'images/bowl.jpg', 'images/joy.jpg'];
+    $('#quickview-card').innerHTML = `
+      <button class="pdp__close" aria-label="Stäng">✕</button>
+      <div class="pdp">
+        <div class="pdp__gallery">
+          <div class="pdp__main"><img id="pdp-main" src="${p.img}" alt="${p.name}"></div>
+          <div class="pdp__thumbs">${thumbs.map((t, i) => `<button class="${i === 0 ? 'is-active' : ''}" data-thumb="${t}"><img src="${t}" alt=""></button>`).join('')}</div>
+        </div>
+        <div class="pdp__body">
+          <p class="pdp__crumb">Smaker / ${p.name}</p>
+          <div>${p.badges.map(b => `<span class="tag tag--${b.c}">${b.t}</span>`).join(' ')}</div>
+          <h3 class="pdp__name">${p.name}</h3>
+          <p class="pdp__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating.toFixed(1)} · ${p.reviews} omdömen</p>
+          <p class="pdp__price" id="pdp-price">${kr(pdpPrice(p))} <small>inkl. moms</small></p>
+          <p class="pdp__desc">${p.flavor}. Tillverkad på svensk ekologisk grädde i små satser, utan konstgjorda färger eller smaker.</p>
+          <p class="pdp__vlabel">Välj storlek</p>
+          <div class="pdp__variants">${VARIANTS.map(v => `<button class="variant ${v.key === pdp.variant ? 'is-active' : ''}" data-variant="${v.key}">${v.label}<small>${v.sub}</small></button>`).join('')}</div>
+          <div class="pdp__buy">
+            <div class="pdp__qty"><button data-pq="-1" aria-label="Minska">−</button><span id="pdp-qty">${pdp.qty}</span><button data-pq="1" aria-label="Öka">+</button></div>
+            <button class="btn btn--primary" data-pdpadd>Lägg i kundvagn</button>
+            <button class="card__heart ${wishlist.includes(p.id) ? 'is-active' : ''}" data-pdpwish aria-label="Spara som favorit" style="position:static">
+              <svg viewBox="0 0 24 24" class="ic"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            </button>
+          </div>
+          <div class="pdp__section">
+            <h4>Näringsvärde <span style="font-weight:400;color:var(--muted);font-size:.8rem">per 100 ml</span></h4>
+            <table class="nutri">
+              <tr><td>Energi</td><td>${n.energi}</td></tr>
+              <tr><td>Fett</td><td>${n.fett}</td></tr>
+              <tr><td>Kolhydrat (varav socker)</td><td>${n.kolhydrat} (${n.socker})</td></tr>
+              <tr><td>Protein</td><td>${n.protein}</td></tr>
+            </table>
+          </div>
+          <div class="pdp__section">
+            <h4>Innehåll &amp; allergener</h4>
+            <p class="pdp__desc">Ekologisk grädde, ekologisk mjölk, råsocker, naturliga smaker. <strong>Allergener:</strong> ${p.allergens}. Förvaras vid −18 °C.</p>
+          </div>
+          <div class="pdp__section">
+            <h4>Omdömen (${p.reviews})</h4>
+            ${REVIEWS.map(r => `<div class="pdp__rev"><span class="stars">${stars(r[1])}</span><b>${r[0]}</b><p>${r[2]}</p></div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  }
+  function openQuick(id) {
+    if (!byId(id)) return;
+    pdp = { id, variant: '1', qty: 1 };
+    renderPDP();
+    try { history.replaceState(null, '', '#produkt/' + id); } catch (e) {}
+    openModal(qv);
+  }
+  function closePDP() {
+    closeModal(qv);
+    if (location.hash.indexOf('#produkt/') === 0) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+  }
+  qv.addEventListener('click', e => {
+    if (e.target === qv || e.target.closest('.pdp__close')) return closePDP();
+    const p = byId(pdp.id); if (!p) return;
+    const thumb = e.target.closest('[data-thumb]');
+    const variant = e.target.closest('[data-variant]');
+    const pq = e.target.closest('[data-pq]');
+    if (thumb) { $('#pdp-main').src = thumb.dataset.thumb; $$('.pdp__thumbs button', qv).forEach(b => b.classList.toggle('is-active', b === thumb)); return; }
+    if (variant) { pdp.variant = variant.dataset.variant; $$('.variant', qv).forEach(b => b.classList.toggle('is-active', b === variant)); $('#pdp-price').innerHTML = `${kr(pdpPrice(p))} <small>inkl. moms</small>`; return; }
+    if (pq) { pdp.qty = Math.max(1, pdp.qty + (+pq.dataset.pq)); $('#pdp-qty').textContent = pdp.qty; return; }
+    if (e.target.closest('[data-pdpadd]')) {
+      const v = VARIANTS.find(v => v.key === pdp.variant);
+      flyToCart($('#pdp-main'));
+      addToCart(p.id + '-' + v.key, { id: p.id + '-' + v.key, name: p.name, img: p.img, price: pdpPrice(p), meta: v.label, qty: pdp.qty });
+      closePDP(); return;
     }
-  }, 4000);
+    if (e.target.closest('[data-pdpwish]')) { toggleWish(p.id, e.target.closest('[data-pdpwish]')); syncHearts(); }
+  });
+  // open PDP from a #produkt/<id> URL on load
+  if (location.hash.indexOf('#produkt/') === 0) {
+    const id = location.hash.slice('#produkt/'.length);
+    if (byId(id)) setTimeout(() => openQuick(id), 300);
+  }
 
-  // ============================================
-  // NAVIGATION
-  // ============================================
-  const nav = document.getElementById('main-nav');
-  const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('nav-links');
+  /* ---------- BOX BUILDER ---------- */
+  const boxFlavors = $('#box-flavors');
+  const boxSlots = $('#box-slots');
+  let box = [];
+  const BOX_MAX = 6, BOX_PRICE = 299;
+  boxFlavors.innerHTML = PRODUCTS.map(p =>
+    `<button class="flavor-pick" data-box="${p.id}"><img src="${p.img}" alt=""><span>${p.name}</span></button>`).join('');
+  function renderBox() {
+    boxSlots.innerHTML = Array.from({ length: BOX_MAX }, (_, i) => {
+      if (box[i]) { const p = byId(box[i]); return `<div class="box__slot"><img src="${p.img}" alt="${p.name}"><button data-boxrm="${i}" aria-label="Ta bort">✕</button></div>`; }
+      return `<div class="box__slot">🍦</div>`;
+    }).join('');
+    const full = box.length === BOX_MAX;
+    $('#box-add').disabled = !full;
+    $('#box-hint').textContent = full ? 'Boxen är full – redo att läggas till!' : `Välj ${BOX_MAX - box.length} smak(er) till.`;
+  }
+  boxFlavors.addEventListener('click', e => {
+    const b = e.target.closest('[data-box]'); if (!b) return;
+    if (box.length >= BOX_MAX) { toast('Boxen är redan full 🍨'); return; }
+    box.push(b.dataset.box); renderBox();
+  });
+  boxSlots.addEventListener('click', e => {
+    const rm = e.target.closest('[data-boxrm]'); if (!rm) return;
+    box.splice(+rm.dataset.boxrm, 1); renderBox();
+  });
+  $('#box-add').addEventListener('click', () => {
+    const names = box.map(id => byId(id).name);
+    addToCart('box-' + Date.now(), { id: 'box-' + Date.now(), name: 'Egen 6-pack', img: box[0] ? byId(box[0]).img : 'images/bowl.jpg', price: BOX_PRICE, meta: names.join(', ') });
+    box = []; renderBox(); openDrawer(cartDrawer);
+  });
+  renderBox();
 
+  /* ---------- SUBSCRIPTION ---------- */
+  $$('[data-sub]').forEach(b => b.addEventListener('click', () => {
+    addToCart('sub-' + b.dataset.sub, { id: 'sub-' + b.dataset.sub, name: 'Glassklubben – ' + b.dataset.sub, img: 'images/joy.jpg', price: +b.dataset.price, meta: 'Prenumeration / månad' });
+    openDrawer(cartDrawer);
+  }));
+
+  /* ---------- CHECKOUT (fake) ---------- */
+  $('#checkout-btn').addEventListener('click', () => {
+    if (!cart.length) return;
+    const items = cartTotal(), disc = discountAmount();
+    const ship = items >= FREE_SHIP ? 0 : 49;
+    const discRow = disc ? `<div style="display:flex;justify-content:space-between;color:var(--mynta-deep)"><span>Rabatt (${discountCode})</span><span>−${kr(disc)}</span></div>` : '';
+    $('#checkout-card').innerHTML = `
+      <div class="popup__emoji">🍨</div>
+      <h2 style="font-family:var(--font-display);font-size:1.7rem;margin:.3rem 0">Tack för din beställning!</h2>
+      <p style="color:var(--text-soft);margin:.5rem 0 1rem">Det här är en demo – ingen riktig betalning sker. I en skarp butik skulle nästa steg vara <strong>Stripe Checkout</strong> eller <strong>Klarna</strong>.</p>
+      <div style="text-align:left;background:var(--bg-alt);border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between"><span>Varor (${cartQty()})</span><span>${kr(items)}</span></div>
+        ${discRow}
+        <div style="display:flex;justify-content:space-between"><span>Frakt</span><span>${ship === 0 ? 'Gratis' : kr(ship)}</span></div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.2rem;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--hairline)"><strong>Totalt</strong><strong>${kr(payableTotal() + ship)}</strong></div>
+      </div>
+      <button class="btn btn--primary btn--block" id="checkout-done">Klart!</button>`;
+    closeDrawer(cartDrawer);
+    openModal($('#checkout-modal'));
+  });
+  $('#checkout-modal').addEventListener('click', e => {
+    if (e.target === $('#checkout-modal') || e.target.id === 'checkout-done') {
+      closeModal($('#checkout-modal'));
+      if (e.target.id === 'checkout-done') { cart = []; saveCart(); toast('🎉 Tack! Din glass är på väg (på låtsas)'); }
+    }
+  });
+
+  /* ---------- DRAWERS / MODALS ---------- */
+  const overlay = $('#overlay');
+  let openDrawerEl = null;
+  function openDrawer(d) {
+    openDrawerEl = d; overlay.hidden = false;
+    requestAnimationFrame(() => { overlay.classList.add('is-open'); d.classList.add('is-open'); });
+    d.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer(d) {
+    d.classList.remove('is-open'); overlay.classList.remove('is-open');
+    d.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';
+    setTimeout(() => { if (!$('.drawer.is-open')) overlay.hidden = true; }, 380);
+    openDrawerEl = null;
+  }
+  overlay.addEventListener('click', () => openDrawerEl && closeDrawer(openDrawerEl));
+  $('#cart-btn').addEventListener('click', () => { renderCart(); openDrawer(cartDrawer); });
+  $('#cart-close').addEventListener('click', () => closeDrawer(cartDrawer));
+  $('#wishlist-btn').addEventListener('click', () => { renderWish(); openDrawer(wishDrawer); });
+  $('#wishlist-close').addEventListener('click', () => closeDrawer(wishDrawer));
+  $('#cart-empty-shop').addEventListener('click', () => { closeDrawer(cartDrawer); location.hash = '#smaker'; });
+  $('#wishlist-empty-shop').addEventListener('click', () => { closeDrawer(wishDrawer); location.hash = '#smaker'; });
+
+  function openModal(m) { m.classList.add('is-open'); m.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+  function closeModal(m) { m.classList.remove('is-open'); m.setAttribute('aria-hidden', 'true'); if (!$('.drawer.is-open')) document.body.style.overflow = ''; }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    $$('.modal.is-open').forEach(closeModal);
+    if (openDrawerEl) closeDrawer(openDrawerEl);
+    closePopup();
+  });
+
+  /* ---------- HEADER / NAV ---------- */
+  const header = $('#header'), nav = $('#nav'), hb = $('#hamburger');
+  hb.addEventListener('click', () => { const o = nav.classList.toggle('is-open'); hb.classList.toggle('is-open', o); });
+  nav.addEventListener('click', e => { if (e.target.tagName === 'A') { nav.classList.remove('is-open'); hb.classList.remove('is-open'); } });
+  $('#nav-close').addEventListener('click', () => { nav.classList.remove('is-open'); hb.classList.remove('is-open'); });
+
+  // search bar
+  const sb = $('#searchbar'), si = $('#search-input');
+  $('#search-btn').addEventListener('click', () => {
+    const show = sb.hidden; sb.hidden = !show;
+    if (show) si.focus();
+  });
+  $('#search-close').addEventListener('click', () => { sb.hidden = true; });
+  si.addEventListener('input', e => {
+    query = e.target.value.trim().toLowerCase();
+    $('#shop-search').value = e.target.value;
+    renderGrid();
+  });
+  si.addEventListener('keydown', e => { if (e.key === 'Enter') { sb.hidden = true; document.getElementById('smaker').scrollIntoView({ behavior: 'smooth' }); } });
+
+  // announce close
+  $('#announce-close').addEventListener('click', () => { $('#announce').classList.add('is-hidden'); store.set('announce', 'closed'); });
+  if (store.get('announce') === 'closed') $('#announce').classList.add('is-hidden');
+
+  /* ---------- THEME ---------- */
+  $('#theme-toggle').addEventListener('click', () => {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (dark) document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', 'dark');
+    store.set ? localStorage.setItem('theme', dark ? 'light' : 'dark') : 0;
+  });
+
+  /* ---------- TO TOP ---------- */
+  const toTop = $('#to-top');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 80) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  });
-
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navLinks.classList.toggle('open');
-  });
-
-  // Close menu on link click
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navLinks.classList.remove('open');
-    });
-  });
-
-  // ============================================
-  // HERO ANIMATIONS
-  // ============================================
-  function startHeroAnimations() {
-    const heroTl = gsap.timeline();
-
-    // Clouds float in
-    heroTl.to('.cloud-1', { left: '10%', duration: 2, ease: 'power2.out' }, 0)
-      .to('.cloud-2', { left: '60%', duration: 2.5, ease: 'power2.out' }, 0.2)
-      .to('.cloud-3', { right: '5%', duration: 2, ease: 'power2.out' }, 0.3)
-      .to('.cloud-4', { right: '30%', duration: 2.2, ease: 'power2.out' }, 0.4)
-      .to('.cloud-5', { opacity: 0.9, duration: 1.5, ease: 'power2.out' }, 0.6);
-
-    // Title animation
-    heroTl.to('.title-the', {
-      opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)'
-    }, 0.8)
-    .to('.title-simpsons', {
-      opacity: 1, scale: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)'
-    }, 1)
-    .to('.title-fan', {
-      opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-    }, 1.3)
-    .to('.hero-subtitle', {
-      opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-    }, 1.5)
-    .to('.hero-btn', {
-      opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-    }, 1.7);
-
-    // Set initial states
-    gsap.set('.title-the', { y: -30 });
-    gsap.set('.title-simpsons', { scale: 0.5 });
-    gsap.set('.title-fan', { y: 30 });
-    gsap.set('.hero-subtitle', { y: 20 });
-    gsap.set('.hero-btn', { y: 20 });
-
-    // Buildings rise up
-    gsap.from('.building', {
-      height: 0,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.1,
-      ease: 'power2.out',
-      delay: 0.5,
-      onStart: () => {
-        document.querySelectorAll('.building').forEach(b => b.style.opacity = '1');
-      }
-    });
-
-    gsap.to('.cooling-tower', {
-      opacity: 1,
-      duration: 1,
-      delay: 1.5,
-      ease: 'power2.out'
-    });
-
-    // Continuous cloud drift
-    gsap.to('.cloud-1', { x: 30, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    gsap.to('.cloud-2', { x: -25, duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    gsap.to('.cloud-3', { x: 20, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    gsap.to('.cloud-4', { x: -30, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    gsap.to('.cloud-5', { x: 15, duration: 5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-
-    // Hero parallax on scroll
-    gsap.to('.hero-content', {
-      scrollTrigger: {
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      },
-      y: -100,
-      opacity: 0
-    });
-
-    gsap.to('.springfield-skyline', {
-      scrollTrigger: {
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      },
-      y: 50
-    });
-  }
-
-  // ============================================
-  // CHARACTER CAROUSEL
-  // ============================================
-  const track = document.querySelector('.character-track');
-  const cards = document.querySelectorAll('.character-card');
-  const dotsContainer = document.querySelector('.carousel-dots');
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
-
-  let currentSlide = 0;
-  let cardsPerView = getCardsPerView();
-
-  function getCardsPerView() {
-    if (window.innerWidth < 480) return 1;
-    if (window.innerWidth < 768) return 2;
-    if (window.innerWidth < 1024) return 3;
-    return 4;
-  }
-
-  function getTotalSlides() {
-    return Math.max(1, cards.length - cardsPerView + 1);
-  }
-
-  function createDots() {
-    dotsContainer.innerHTML = '';
-    const total = getTotalSlides();
-    for (let i = 0; i < total; i++) {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      if (i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => goToSlide(i));
-      dotsContainer.appendChild(dot);
-    }
-  }
-
-  function updateDots() {
-    document.querySelectorAll('.carousel-dots .dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentSlide);
-    });
-  }
-
-  function goToSlide(index) {
-    const total = getTotalSlides();
-    currentSlide = Math.max(0, Math.min(index, total - 1));
-    const cardWidth = cards[0].offsetWidth + 30; // width + gap
-    gsap.to(track, {
-      x: -currentSlide * cardWidth,
-      duration: 0.5,
-      ease: 'power2.out'
-    });
-    updateDots();
-  }
-
-  prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-  nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-
-  createDots();
-
-  window.addEventListener('resize', () => {
-    cardsPerView = getCardsPerView();
-    createDots();
-    goToSlide(Math.min(currentSlide, getTotalSlides() - 1));
-  });
-
-  // Scroll triggered entrance for characters section
-  gsap.fromTo('.character-card',
-    { y: 60, opacity: 0 },
-    {
-      scrollTrigger: {
-        trigger: '#characters',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'power2.out'
-    }
-  );
-
-  // Touch/swipe support for carousel
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
+    toTop.classList.toggle('is-visible', window.scrollY > 600);
   }, { passive: true });
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  track.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) goToSlide(currentSlide + 1);
-      else goToSlide(currentSlide - 1);
-    }
-  }, { passive: true });
+  /* ---------- NEWSLETTER ---------- */
+  $('#newsletter-form').addEventListener('submit', e => { e.preventDefault(); e.target.reset(); toast('🎉 Välkommen till Lyckoklubben! Kod: LYCKA10'); });
 
-  // ============================================
-  // LOCATIONS - SCROLL ANIMATIONS
-  // ============================================
-  gsap.fromTo('.location-card',
-    { y: 80, opacity: 0 },
-    {
-      scrollTrigger: {
-        trigger: '#world',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      duration: 0.7,
-      stagger: 0.12,
-      ease: 'power2.out'
-    }
-  );
+  /* ---------- DISCOUNT POPUP ---------- */
+  const popup = $('#popup');
+  function openPopup() { popup.classList.add('is-open'); popup.setAttribute('aria-hidden', 'false'); }
+  function closePopup() { popup.classList.remove('is-open'); popup.setAttribute('aria-hidden', 'true'); store.set('popup', 'seen'); }
+  $('#popup-close').addEventListener('click', closePopup);
+  $('#popup-skip').addEventListener('click', closePopup);
+  $('#popup').addEventListener('click', e => { if (e.target === popup) closePopup(); });
+  $('#popup-form').addEventListener('submit', e => { e.preventDefault(); closePopup(); toast('🎉 Din kod: LYCKA10 (10% rabatt)'); });
+  if (!store.get('popup')) setTimeout(() => { if (!$('.drawer.is-open') && !$('.modal.is-open')) openPopup(); }, 9000);
 
-  // Hover tilt effect on location cards
-  document.querySelectorAll('.location-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = (y - centerY) / 20;
-      const rotateY = (centerX - x) / 20;
+  /* ---------- COOKIE ---------- */
+  const cookie = $('#cookie');
+  if (!store.get('cookies')) setTimeout(() => { cookie.hidden = false; }, 1200);
+  $('#cookie-accept').addEventListener('click', () => { store.set('cookies', 'all'); cookie.hidden = true; });
+  $('#cookie-deny').addEventListener('click', () => { store.set('cookies', 'essential'); cookie.hidden = true; });
 
-      gsap.to(card, {
-        rotationX: rotateX,
-        rotationY: rotateY,
-        duration: 0.3,
-        ease: 'power2.out',
-        transformPerspective: 800
+  /* ---------- FOOTER ACCORDION (mobile) ---------- */
+  $$('.footer__col h4').forEach(h => {
+    h.setAttribute('role', 'button');
+    h.setAttribute('tabindex', '0');
+    const toggle = () => { if (window.matchMedia('(max-width: 680px)').matches) h.parentElement.classList.toggle('is-open'); };
+    h.addEventListener('click', toggle);
+    h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+  });
+
+  /* ---------- TOASTS ---------- */
+  let toastTimer;
+  function toast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    $('#toasts').appendChild(t);
+    setTimeout(() => { t.classList.add('is-out'); setTimeout(() => t.remove(), 300); }, 2400);
+  }
+  function bump(el) { if (!el) return; el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 350, easing: 'ease' }); }
+
+  /* ---------- FLY TO CART ---------- */
+  function flyToCart(imgEl) {
+    try {
+      const cartBtn = $('#cart-btn');
+      if (!imgEl || !cartBtn || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (document.documentElement.getAttribute('data-perf') === 'lite') return;
+      const s = imgEl.getBoundingClientRect(), t = cartBtn.getBoundingClientRect();
+      const fly = document.createElement('img');
+      fly.src = imgEl.currentSrc || imgEl.src; fly.className = 'fly';
+      fly.style.cssText = `left:${s.left}px;top:${s.top}px;width:${s.width}px;height:${s.height}px;opacity:1`;
+      document.body.appendChild(fly);
+      requestAnimationFrame(() => {
+        fly.style.left = (t.left + t.width / 2 - 14) + 'px';
+        fly.style.top = (t.top + t.height / 2 - 14) + 'px';
+        fly.style.width = '28px'; fly.style.height = '28px';
+        fly.style.opacity = '0.15'; fly.style.transform = 'rotate(35deg)';
       });
-    });
-
-    card.addEventListener('mouseleave', () => {
-      gsap.to(card, {
-        rotationX: 0,
-        rotationY: 0,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
-    });
-  });
-
-  // ============================================
-  // EPISODES TIMELINE - SCROLL ANIMATIONS
-  // ============================================
-  document.querySelectorAll('.episode-item').forEach((item, i) => {
-    const direction = item.classList.contains('left') ? -80 : 80;
-
-    gsap.fromTo(item,
-      { x: direction, opacity: 0 },
-      {
-        scrollTrigger: {
-          trigger: item,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-          once: true
-        },
-        x: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.out',
-        delay: i * 0.1
-      }
-    );
-  });
-
-  // Animate timeline line
-  gsap.from('.timeline-line', {
-    scrollTrigger: {
-      trigger: '.episodes-timeline',
-      start: 'top 80%',
-      end: 'bottom 20%',
-      scrub: true
-    },
-    scaleY: 0,
-    transformOrigin: 'top center'
-  });
-
-  // ============================================
-  // GAMES - ANIMATIONS
-  // ============================================
-  gsap.fromTo('.game-card.featured',
-    { y: 60, opacity: 0 },
-    {
-      scrollTrigger: {
-        trigger: '#games',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      ease: 'power2.out'
-    }
-  );
-
-  gsap.fromTo('.game-card.mini',
-    { y: 50, opacity: 0 },
-    {
-      scrollTrigger: {
-        trigger: '.games-grid',
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      duration: 0.6,
-      stagger: 0.15,
-      ease: 'power2.out'
-    }
-  );
-
-  // Animate rating bar
-  gsap.from('.rating-fill', {
-    scrollTrigger: {
-      trigger: '.game-rating-bar',
-      start: 'top 90%'
-    },
-    width: 0,
-    duration: 1.5,
-    ease: 'power2.out'
-  });
-
-  // ============================================
-  // QUOTES CAROUSEL
-  // ============================================
-  const quoteCards = document.querySelectorAll('.quote-card');
-  let currentQuote = 0;
-  let quoteInterval;
-
-  function showQuote(index) {
-    quoteCards.forEach(card => card.classList.remove('active'));
-    currentQuote = ((index % quoteCards.length) + quoteCards.length) % quoteCards.length;
-    quoteCards[currentQuote].classList.add('active');
+      setTimeout(() => fly.remove(), 950);
+    } catch (e) {}
   }
 
-  function startQuoteAutoplay() {
-    quoteInterval = setInterval(() => showQuote(currentQuote + 1), 5000);
-  }
+  /* ---------- REVEAL ---------- */
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver((ents, o) => {
+    ents.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); o.unobserve(en.target); } });
+  }, { threshold: 0.12 }) : null;
+  $$('[data-reveal]').forEach(el => io ? io.observe(el) : el.classList.add('is-in'));
 
-  function resetQuoteAutoplay() {
-    clearInterval(quoteInterval);
-    startQuoteAutoplay();
-  }
-
-  document.getElementById('next-quote').addEventListener('click', () => {
-    showQuote(currentQuote + 1);
-    resetQuoteAutoplay();
-  });
-
-  document.getElementById('prev-quote').addEventListener('click', () => {
-    showQuote(currentQuote - 1);
-    resetQuoteAutoplay();
-  });
-
-  startQuoteAutoplay();
-
-  // ============================================
-  // TRIVIA - SCROLL ANIMATIONS
-  // ============================================
-  gsap.fromTo('.trivia-card',
-    { y: 60, opacity: 0, rotation: 5 },
-    {
-      scrollTrigger: {
-        trigger: '#trivia',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      rotation: 0,
-      duration: 0.7,
-      stagger: 0.1,
-      ease: 'power2.out'
-    }
-  );
-
-  // Counter animation for trivia numbers
-  document.querySelectorAll('.trivia-number').forEach(num => {
-    const target = parseInt(num.textContent);
-    gsap.from(num, {
-      scrollTrigger: {
-        trigger: num,
-        start: 'top 90%'
-      },
-      textContent: 0,
-      duration: 1.5,
-      ease: 'power2.out',
-      snap: { textContent: 1 },
-      onUpdate: function() {
-        num.textContent = String(Math.round(this.targets()[0]._gsap.textContent || 0)).padStart(2, '0');
-      }
-    });
-  });
-
-  // ============================================
-  // COUCH GAG ANIMATION
-  // ============================================
-  const couchBtn = document.getElementById('couch-btn');
-  let couchPlaying = false;
-
-  couchBtn.addEventListener('click', () => {
-    if (couchPlaying) return;
-    couchPlaying = true;
-    couchBtn.style.display = 'none';
-
-    const runners = document.querySelectorAll('.runner');
-    const couchCenter = document.querySelector('.the-couch').offsetLeft;
-    const sceneWidth = document.querySelector('.couch-scene').offsetWidth;
-
-    const couchReveal = document.getElementById('couch-reveal');
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        couchPlaying = false;
-        // Payoff: reveal the real "family on the couch" still
-        if (couchReveal) couchReveal.classList.add('show');
-        // Reset after a pause
-        gsap.delayedCall(3, () => {
-          if (couchReveal) couchReveal.classList.remove('show');
-          gsap.to(runners, {
-            opacity: 0,
-            duration: 0.5,
-            delay: 0.4,
-            onComplete: () => {
-              runners.forEach(r => {
-                gsap.set(r, { left: -80, opacity: 0, y: 0, scale: 1 });
-              });
-              couchBtn.style.display = 'block';
-            }
-          });
-        });
-      }
-    });
-
-    // Each family member runs in from the left to the couch
-    const couchX = sceneWidth / 2;
-    const offsets = [-50, -25, 0, 25, 45];
-
-    runners.forEach((runner, i) => {
-      tl.to(runner, {
-        opacity: 1,
-        left: couchX + offsets[i] - 80,
-        duration: 0.6,
-        ease: 'power2.out'
-      }, i * 0.15);
-    });
-
-    // Bounce when they sit down
-    tl.to(runners, {
-      y: -20,
-      duration: 0.2,
-      ease: 'power2.out'
-    }, '+=0.1')
-    .to(runners, {
-      y: 0,
-      duration: 0.3,
-      ease: 'bounce.out'
-    });
-
-    // Couch squash
-    tl.to('.the-couch', {
-      scaleY: 0.9,
-      scaleX: 1.05,
-      duration: 0.15,
-      ease: 'power2.in'
-    }, '-=0.5')
-    .to('.the-couch', {
-      scaleY: 1,
-      scaleX: 1,
-      duration: 0.3,
-      ease: 'elastic.out(1, 0.3)'
-    });
-
-    // Random couch gag effect
-    const gags = ['spin', 'shrink', 'fly', 'bounce'];
-    const randomGag = gags[Math.floor(Math.random() * gags.length)];
-
-    switch (randomGag) {
-      case 'spin':
-        tl.to(runners, {
-          rotation: 360,
-          duration: 0.8,
-          ease: 'power2.inOut',
-          stagger: 0.05
-        }, '+=0.5');
-        break;
-      case 'shrink':
-        tl.to(runners, {
-          scale: 0.3,
-          duration: 0.5,
-          ease: 'power2.in',
-          stagger: 0.05
-        }, '+=0.5')
-        .to(runners, {
-          scale: 1,
-          duration: 0.5,
-          ease: 'elastic.out(1, 0.3)',
-          stagger: 0.05
-        });
-        break;
-      case 'fly':
-        tl.to(runners, {
-          y: -100,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.08
-        }, '+=0.5')
-        .to(runners, {
-          y: 0,
-          duration: 0.6,
-          ease: 'bounce.out',
-          stagger: 0.08
-        });
-        break;
-      case 'bounce':
-        runners.forEach((runner, i) => {
-          tl.to(runner, {
-            y: -60 - (i * 15),
-            duration: 0.3,
-            ease: 'power2.out'
-          }, '+=0.1')
-          .to(runner, {
-            y: 0,
-            duration: 0.4,
-            ease: 'bounce.out'
-          });
-        });
-        break;
-    }
-  });
-
-  // ============================================
-  // SECTION HEADERS - SCROLL ANIMATIONS
-  // ============================================
-  document.querySelectorAll('.section-header').forEach(header => {
-    gsap.fromTo(header.querySelector('.section-title'),
-      { y: 40, opacity: 0 },
-      {
-        scrollTrigger: {
-          trigger: header,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-          once: true
-        },
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.out'
-      }
-    );
-
-    gsap.fromTo(header.querySelector('.section-subtitle'),
-      { y: 20, opacity: 0 },
-      {
-        scrollTrigger: {
-          trigger: header,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-          once: true
-        },
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        delay: 0.2,
-        ease: 'power2.out'
-      }
-    );
-  });
-
-  // ============================================
-  // SMOOTH SCROLL FOR NAV LINKS
-  // ============================================
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        const offset = 70;
-        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    });
-  });
-
-  // ============================================
-  // EASTER EGG - KONAMI CODE
-  // ============================================
-  const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-  let konamiIndex = 0;
-
-  document.addEventListener('keydown', (e) => {
-    if (e.keyCode === konamiCode[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konamiCode.length) {
-        konamiIndex = 0;
-        activateEasterEgg();
-      }
-    } else {
-      konamiIndex = 0;
-    }
-  });
-
-  function activateEasterEgg() {
-    // D'oh! rain
-    for (let i = 0; i < 30; i++) {
-      const doh = document.createElement('div');
-      doh.textContent = "D'oh!";
-      doh.style.cssText = `
-        position: fixed;
-        top: -50px;
-        left: ${Math.random() * 100}vw;
-        font-family: 'Bangers', cursive;
-        font-size: ${1 + Math.random() * 2}rem;
-        color: ${['#FED41D', '#F39C12', '#E74C3C', '#2980B9', '#FF69B4'][Math.floor(Math.random() * 5)]};
-        z-index: 99999;
-        pointer-events: none;
-        text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-      `;
-      document.body.appendChild(doh);
-
-      gsap.to(doh, {
-        y: window.innerHeight + 100,
-        rotation: Math.random() * 720 - 360,
-        duration: 2 + Math.random() * 3,
-        delay: Math.random() * 2,
-        ease: 'power1.in',
-        onComplete: () => doh.remove()
-      });
-    }
-  }
-
-  // ============================================
-  // THEME TOGGLE (dark / light, persisted)
-  // ============================================
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      const next = isLight ? 'dark' : 'light';
-      if (next === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      // refresh scroll-triggered positions after the color transition
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
-    });
-  }
-
-  // ============================================
-  // GALLERY - SCROLL REVEAL
-  // ============================================
-  gsap.fromTo('.gallery-item',
-    { y: 50, opacity: 0, scale: 0.96 },
-    {
-      scrollTrigger: {
-        trigger: '#gallery',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-        once: true
-      },
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      duration: 0.7,
-      stagger: 0.08,
-      ease: 'power2.out'
-    }
-  );
-
-  // ============================================
-  // CURSOR TRAIL (Desktop, motion-safe, non-lite only)
-  // ============================================
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isLiteMode = document.documentElement.getAttribute('data-perf') === 'lite';
-
-  if (window.innerWidth > 768 && !prefersReducedMotion && !isLiteMode) {
-    let lastTrailTime = 0;
-    document.addEventListener('mousemove', (e) => {
-      const now = Date.now();
-      if (now - lastTrailTime < 80) return;
-      lastTrailTime = now;
-
-      const trail = document.createElement('div');
-      trail.style.cssText = `
-        position: fixed;
-        left: ${e.clientX}px;
-        top: ${e.clientY}px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--simpsons-yellow);
-        pointer-events: none;
-        z-index: 99998;
-        opacity: 0.7;
-      `;
-      document.body.appendChild(trail);
-
-      gsap.to(trail, {
-        opacity: 0,
-        scale: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        onComplete: () => trail.remove()
-      });
-    });
-  }
-
-  // ============================================
-  // RUNTIME FPS GUARD — auto-downgrade to Lite on
-  // weak GPUs (cores/memory checks alone miss them)
-  // ============================================
+  /* ---------- MAP (Leaflet · real pins · lazy) ---------- */
   (function () {
-    const root = document.documentElement;
-    let stored;
-    try { stored = localStorage.getItem('simpsons:perfMode'); } catch (e) {}
-    // Only auto-measure when running in 'auto' (no explicit user choice) and not already lite
-    if (stored === 'lite' || stored === 'standard') return;
-    if (root.getAttribute('data-perf') === 'lite') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        let frames = 0;
-        const start = performance.now();
-        function tick(now) {
-          frames++;
-          if (now - start < 2500) {
-            requestAnimationFrame(tick);
-          } else {
-            const fps = (frames * 1000) / (now - start);
-            if (fps < 40) {
-              root.setAttribute('data-perf', 'lite');
-              try { localStorage.setItem('simpsons:perfMode', 'lite'); } catch (e) {}
-            }
-          }
-        }
-        requestAnimationFrame(tick);
-      }, 1500);
-    });
+    const el = $('#map'); if (!el || !window.L) return;
+    let made = false;
+    const make = () => {
+      if (made) return; made = true;
+      try {
+        const map = L.map(el, { scrollWheelZoom: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+        const icon = L.divIcon({ className: 'lk-pin', html: '🍦', iconSize: [30, 30], iconAnchor: [15, 28], popupAnchor: [0, -26] });
+        const spots = [
+          [59.331, 18.064, 'Stockholm', 'Götgatan 12 · Öppet 11–21'],
+          [57.700, 11.968, 'Göteborg', 'Magasinsgatan 4 · Öppet 11–21'],
+          [55.605, 13.000, 'Malmö', 'Lilla Torg 7 · Öppet 11–20'],
+          [58.944, 17.490, 'Sörmland (gården)', 'Lyckhem, Vagnhärad · Helger 10–17']
+        ];
+        const pts = spots.map(s => { L.marker([s[0], s[1]], { icon }).addTo(map).bindPopup(`<b>${s[2]}</b>${s[3]}`); return [s[0], s[1]]; });
+        map.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
+        setTimeout(() => map.invalidateSize(), 250);
+      } catch (e) {}
+    };
+    setTimeout(make, 50);
   })();
 
-});
+  /* ---------- EFFECT LEVEL (Lite / Standard / Full) ---------- */
+  let lenisInst = null, lenisRAF = 0;
+  function setLenis(on) {
+    if (on && !lenisInst && window.Lenis && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      try {
+        lenisInst = new Lenis({ duration: 1.05, smoothWheel: true });
+        const raf = t => { if (lenisInst) { lenisInst.raf(t); lenisRAF = requestAnimationFrame(raf); } };
+        lenisRAF = requestAnimationFrame(raf);
+      } catch (e) {}
+    } else if (!on && lenisInst) {
+      try { lenisInst.destroy(); } catch (e) {}
+      lenisInst = null; if (lenisRAF) cancelAnimationFrame(lenisRAF);
+    }
+  }
+  function applyPerf(mode, save) {
+    document.documentElement.setAttribute('data-perf', mode);
+    if (save !== false) { try { localStorage.setItem('lyckokulan:perfMode', mode); } catch (e) {} }
+    $$('[data-perf-set]').forEach(b => b.classList.toggle('is-active', b.dataset.perfSet === mode));
+    setLenis(mode === 'full');
+  }
+  $$('[data-perf-set]').forEach(b => b.addEventListener('click', () => { applyPerf(b.dataset.perfSet); toast('Effektnivå: ' + b.textContent); }));
+  applyPerf(document.documentElement.getAttribute('data-perf') || 'full', false);
+
+  /* ---------- FPS GUARD — auto-downgrade full→standard on weak GPUs (only if user hasn't chosen) ---------- */
+  (function () {
+    let chosen = null; try { chosen = localStorage.getItem('lyckokulan:perfMode'); } catch (e) {}
+    if (chosen === 'full' || chosen === 'standard' || chosen === 'lite') return;
+    if (document.documentElement.getAttribute('data-perf') !== 'full') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setTimeout(() => {
+      let frames = 0; const start = performance.now();
+      (function tick(now) {
+        frames++;
+        if (now - start < 2200) requestAnimationFrame(tick);
+        else if ((frames * 1000 / (now - start)) < 45) { applyPerf('standard'); toast('🍦 Sänkte effektnivån för mjukare scroll – ändra längst ner'); }
+      })(performance.now());
+    }, 1400);
+  })();
+
+  /* ---------- INIT ---------- */
+  renderGrid();
+  renderCart();
+  renderWish();
+  updateCounts();
+})();

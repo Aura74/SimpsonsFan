@@ -3,796 +3,487 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Springfield Fanzonen – En hyllning till The Simpsons</title>
-  <meta name="description" content="Springfield Fanzonen – en interaktiv svensk fansajt om The Simpsons: karaktärer, ikoniska platser, legendariska avsnitt, spel, citat och trivia.">
+  <title>Lyckokulan – Premiumglass för hela familjen</title>
+  <meta name="description" content="Lyckokulan – handgjord premiumglass på svensk ekologisk mjölk, utan konstgjorda färger. Smaker för både barn och föräldrar, levererad fryst hem till dörren.">
 
-  <!-- Set theme + performance mode BEFORE paint (no flash of wrong theme) -->
+  <!-- Theme + perf before paint (no flash) -->
   <script>
     (function () {
       try {
         var t = localStorage.getItem('theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
-
-        var perf = localStorage.getItem('simpsons:perfMode');
-        if (!perf) {
-          var lowEnd = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
-                       (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-                       (navigator.connection && navigator.connection.saveData);
-          perf = lowEnd ? 'lite' : 'auto';
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        var perf = localStorage.getItem('lyckokulan:perfMode');
+        if (perf !== 'full' && perf !== 'standard' && perf !== 'lite') {
+          var low = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+                    (navigator.connection && navigator.connection.saveData);
+          perf = low ? 'lite' : 'full';
         }
-        if (perf === 'lite') document.documentElement.setAttribute('data-perf', 'lite');
+        document.documentElement.setAttribute('data-perf', perf);
       } catch (e) {}
     })();
   </script>
 
-  <!-- Donut favicon (inline SVG, zero requests) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%23D2691E'/><circle cx='50' cy='48' r='40' fill='%23FF69B4'/><circle cx='50' cy='50' r='14' fill='%23FED41D'/></svg>">
+  <!-- Scoop favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30 46 L50 92 L70 46 Z' fill='%23E8B07A'/><circle cx='50' cy='40' r='26' fill='%23FF9AA2'/><circle cx='38' cy='34' r='15' fill='%23A8E6CF'/><circle cx='62' cy='36' r='13' fill='%23C8B6E2'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- THEME TOGGLE -->
-  <button class="theme-toggle" id="theme-toggle" aria-label="Växla mörkt/ljust läge" title="Växla mörkt/ljust läge">
-    <span class="icon-moon" aria-hidden="true">🌙</span>
-    <span class="icon-sun" aria-hidden="true">☀️</span>
-  </button>
-
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="donut-spinner">
-      <div class="donut-body"></div>
-      <div class="donut-hole"></div>
-      <div class="donut-frosting"></div>
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announce" id="announce">
+    <div class="announce__track">
+      <span>🍦 Fri frakt över 499 kr</span><span>·</span>
+      <span>❄️ Levereras i klimatsmart fryst box</span><span>·</span>
+      <span>🌱 Svensk ekologisk mjölk</span><span>·</span>
+      <span>🎁 Nya kund? Få 10% med koden <strong>LYCKA10</strong></span>
     </div>
-    <p class="loader-text">Laddar Springfield...</p>
+    <button class="announce__close" id="announce-close" aria-label="Stäng">✕</button>
   </div>
 
-  <!-- NAVIGATION -->
-  <nav id="main-nav">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">SPRINGFIELD</a>
-      <button class="hamburger" id="hamburger" aria-label="Meny">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#hero">Hem</a></li>
-        <li><a href="#characters">Karaktärer</a></li>
-        <li><a href="#world">Springfield</a></li>
-        <li><a href="#gallery">Galleri</a></li>
-        <li><a href="#episodes">Episoder</a></li>
-        <li><a href="#games">Spelen</a></li>
-        <li><a href="#quotes">Citat</a></li>
-        <li><a href="#trivia">Trivia</a></li>
-      </ul>
-    </div>
-  </nav>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#top" class="logo" aria-label="Lyckokulan startsida">
+        <span class="logo__scoop" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="34" height="34">
+            <path d="M14 22 L24 44 L34 22 Z" fill="#E8B07A"/>
+            <circle cx="24" cy="19" r="13" fill="var(--hallon)"/>
+            <circle cx="16" cy="15" r="8" fill="var(--mynta)"/>
+            <circle cx="31" cy="16" r="7" fill="var(--lavender)"/>
+          </svg>
+        </span>
+        <span class="logo__text">Lyckokulan</span>
+      </a>
 
-  <!-- HERO -->
-  <header id="hero">
-    <div class="hero-clouds">
-      <div class="cloud cloud-1"></div>
-      <div class="cloud cloud-2"></div>
-      <div class="cloud cloud-3"></div>
-      <div class="cloud cloud-4"></div>
-      <div class="cloud cloud-5"></div>
+      <nav class="nav" id="nav" aria-label="Huvudmeny">
+        <button class="nav__close" id="nav-close" aria-label="Stäng meny">✕</button>
+        <a href="#smaker">Smaker</a>
+        <a href="#box">Bygg din box</a>
+        <a href="#klubben">Glassklubben</a>
+        <a href="#historia">Vår historia</a>
+        <a href="#hittaoss">Hitta oss</a>
+        <a href="#faq">Frågor</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="icon-btn" id="search-btn" aria-label="Sök smak">
+          <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="icon-btn" id="wishlist-btn" aria-label="Önskelista">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+          <span class="badge" id="wishlist-count" hidden>0</span>
+        </button>
+        <button class="icon-btn" id="cart-btn" aria-label="Kundvagn">
+          <svg viewBox="0 0 24 24" class="ic"><circle cx="9" cy="21" r="1.6"/><circle cx="18" cy="21" r="1.6"/><path d="M2.5 3h2l2.2 12.4a1.6 1.6 0 0 0 1.6 1.3h8.7a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
+          <span class="badge" id="cart-count" hidden>0</span>
+        </button>
+        <button class="icon-btn theme-toggle" id="theme-toggle" aria-label="Växla mörkt/ljust läge">
+          <svg viewBox="0 0 24 24" class="ic ic--moon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg viewBox="0 0 24 24" class="ic ic--sun"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Meny"><span></span><span></span><span></span></button>
+      </div>
     </div>
-    <div class="hero-content">
-      <h1 class="hero-title">
-        <span class="title-the">The</span>
-        <span class="title-simpsons">SIMPSONS</span>
-        <span class="title-fan">Fanzonen</span>
-      </h1>
-      <p class="hero-subtitle">Välkomna till Springfield – den gulaste staden i universum!</p>
-      <a href="#characters" class="hero-btn">Utforska Springfield</a>
-    </div>
-    <div class="springfield-skyline">
-      <div class="building building-1"></div>
-      <div class="building building-2"></div>
-      <div class="building building-3"></div>
-      <div class="building building-4"></div>
-      <div class="building building-5"></div>
-      <div class="building building-6"></div>
-      <div class="building building-7"></div>
-      <div class="building building-8"></div>
-      <div class="cooling-tower">
-        <div class="tower-body"></div>
-        <div class="tower-steam steam-1"></div>
-        <div class="tower-steam steam-2"></div>
-        <div class="tower-steam steam-3"></div>
+    <!-- search bar -->
+    <div class="searchbar" id="searchbar" hidden>
+      <div class="searchbar__inner">
+        <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="search-input" placeholder="Sök smak – t.ex. hallon, mynta, choklad…" aria-label="Sök smak">
+        <button class="searchbar__close" id="search-close" aria-label="Stäng sök">✕</button>
       </div>
     </div>
   </header>
 
-  <!-- CHARACTERS -->
-  <section id="characters">
-    <div class="section-header">
-      <h2 class="section-title">Familjen & Vännerna</h2>
-      <p class="section-subtitle">Möt invånarna i Springfield</p>
-    </div>
+  <span id="top"></span>
 
-    <div class="character-carousel">
-      <div class="character-track">
-
-        <article class="character-card" data-character="homer">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/char-homer.jpg" alt="Homer Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Homer Simpson</h3>
-              <p class="character-role">Familjens överhuvud</p>
-            </div>
-            <div class="card-back">
-              <h3>Homer Jay Simpson</h3>
-              <p>Den öldrickande, munkälskande, kärnkraftverksarbetande patriarken. Homer är känd för sin kärlek till Duff-öl, sin soffa och sitt odödliga utrop "D'oh!". Trots sin lättja och sina brister älskar han sin familj över allt annat.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> 39</div>
-                <div class="stat"><span class="stat-label">Jobb:</span> Säkerhetsinspektör</div>
-                <div class="stat"><span class="stat-label">Favoritmat:</span> Munkar</div>
-                <div class="stat"><span class="stat-label">Catchphrase:</span> "D'oh!"</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="marge">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/char-marge.jpg" alt="Marge Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Marge Simpson</h3>
-              <p class="character-role">Familjens hjärta</p>
-            </div>
-            <div class="card-back">
-              <h3>Marjorie Bouvier Simpson</h3>
-              <p>Den tålmodiga och kärleksfulla modern som håller ihop familjen Simpson. Känd för sitt ikoniska blå tornhår och sin karakteristiska irriterade mumling. Marge är den moraliska kompassen i hushållet.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> 36</div>
-                <div class="stat"><span class="stat-label">Jobb:</span> Hemmafru</div>
-                <div class="stat"><span class="stat-label">Signatur:</span> Blå tornhår</div>
-                <div class="stat"><span class="stat-label">Ljud:</span> *irriterad mumling*</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="bart">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/char-bart.jpg" alt="Bart Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Bart Simpson</h3>
-              <p class="character-role">Springfields busunge</p>
-            </div>
-            <div class="card-back">
-              <h3>Bartholomew JoJo Simpson</h3>
-              <p>Den tioårige rebellen och busungen som terroriserar Springfield Elementary. Bart är känd för sina telefonskämt till Moe's Tavern, sin skateboard och sitt ständiga sabotage. Under ytan gömmer sig dock ett gott hjärta.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> 10</div>
-                <div class="stat"><span class="stat-label">Skola:</span> Springfield Elementary</div>
-                <div class="stat"><span class="stat-label">Hobby:</span> Skateboard</div>
-                <div class="stat"><span class="stat-label">Catchphrase:</span> "Eat my shorts!"</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="lisa">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/gal-lisa-sax.jpg" alt="Lisa Simpson" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Lisa Simpson</h3>
-              <p class="character-role">Familjens geni</p>
-            </div>
-            <div class="card-back">
-              <h3>Lisa Marie Simpson</h3>
-              <p>Den åttaåriga genin, saxofonisten och miljökämpen. Lisa är den mest intelligenta i familjen och känner sig ofta malplacerad. Hon är vegetarian, buddhist och kämpar ständigt för rättvisa i en orättvis värld.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> 8</div>
-                <div class="stat"><span class="stat-label">IQ:</span> 159</div>
-                <div class="stat"><span class="stat-label">Instrument:</span> Saxofon</div>
-                <div class="stat"><span class="stat-label">Passion:</span> Rättvisa</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="maggie">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="character-avatar maggie-avatar">
-                <div class="maggie-head">
-                  <div class="maggie-hair"></div>
-                  <div class="maggie-eye left-eye"><div class="pupil"></div></div>
-                  <div class="maggie-eye right-eye"><div class="pupil"></div></div>
-                  <div class="maggie-pacifier"></div>
-                  <div class="maggie-bow"></div>
-                </div>
-              </div>
-              <h3>Maggie Simpson</h3>
-              <p class="character-role">Bebisen med hemligheter</p>
-            </div>
-            <div class="card-back">
-              <h3>Margaret Evelyn Simpson</h3>
-              <p>Den yngsta Simpson-medlemmen som kommunicerar genom att suga på sin napp. Maggie är överraskande kompetent – hon har skjutit Mr. Burns, räddat sin pappa från gangstrar och visat tecken på genialitet som överträffar även Lisa.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> 1</div>
-                <div class="stat"><span class="stat-label">Vapen:</span> Napp</div>
-                <div class="stat"><span class="stat-label">Fiende:</span> Den enögda bebisen</div>
-                <div class="stat"><span class="stat-label">Kostnad:</span> $847.63/scan</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="burns">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/gal-burns.jpg" alt="Mr. Burns" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Mr. Burns</h3>
-              <p class="character-role">Springfields skurk</p>
-            </div>
-            <div class="card-back">
-              <h3>Charles Montgomery Burns</h3>
-              <p>Springfields rikaste och mest hatade invånare. Ägare av kärnkraftverket och Homers chef. Burns är ofattbart gammal, otroligt ond och så svag att en stark vind kan fälla honom. "Excellent..."</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Ålder:</span> ~104</div>
-                <div class="stat"><span class="stat-label">Förmögenhet:</span> Miljarder</div>
-                <div class="stat"><span class="stat-label">Assistent:</span> Smithers</div>
-                <div class="stat"><span class="stat-label">Catchphrase:</span> "Excellent..."</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="krusty">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="char-photo"><img src="images/char-krusty.jpg" alt="Krusty the Clown" loading="lazy" decoding="async" width="320" height="240" onerror="this.closest('.char-photo').style.display='none'"></div>
-              <h3>Krusty the Clown</h3>
-              <p class="character-role">Springfields underhållare</p>
-            </div>
-            <div class="card-back">
-              <h3>Herschel Shmoikel Krustofsky</h3>
-              <p>Springfields mest älskade TV-clown som är djupt olycklig bakom sminket. Krusty driver ett massivt medieimperium av lågkvalitetsprodukter, är beroende av allt möjligt och har en komplicerad relation med sin far, Rabbi Krustofsky.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Show:</span> The Krusty the Clown Show</div>
-                <div class="stat"><span class="stat-label">Sidekick:</span> Sideshow Mel</div>
-                <div class="stat"><span class="stat-label">Fan:</span> Bart Simpson</div>
-                <div class="stat"><span class="stat-label">Skatt:</span> Betalar inte</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="character-card" data-character="ned">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="character-avatar ned-avatar">
-                <div class="ned-head">
-                  <div class="ned-hair"></div>
-                  <div class="ned-mustache"></div>
-                  <div class="ned-eye left-eye"><div class="pupil"></div></div>
-                  <div class="ned-eye right-eye"><div class="pupil"></div></div>
-                  <div class="ned-glasses"></div>
-                  <div class="ned-mouth"></div>
-                </div>
-              </div>
-              <h3>Ned Flanders</h3>
-              <p class="character-role">Den perfekta grannen</p>
-            </div>
-            <div class="card-back">
-              <h3>Nedward "Ned" Flanders Jr.</h3>
-              <p>Homers övertrevliga, djupt religiösa granne. Ned är Springfields mest moraliska invånare, ägare av Leftorium (butik för vänsterhänta) och pappa till Rod och Todd. Hans goda natur driver Homer till vansinne.</p>
-              <div class="character-stats">
-                <div class="stat"><span class="stat-label">Tro:</span> Mycket religiöst kristen</div>
-                <div class="stat"><span class="stat-label">Butik:</span> Leftorium</div>
-                <div class="stat"><span class="stat-label">Catchphrase:</span> "Hi-diddly-ho!"</div>
-                <div class="stat"><span class="stat-label">Abs:</span> Otroligt vältränad</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
-
-    <div class="carousel-controls">
-      <button class="carousel-btn prev-btn" aria-label="Första">&larr;</button>
-      <div class="carousel-dots"></div>
-      <button class="carousel-btn next-btn" aria-label="Nästa">&rarr;</button>
-    </div>
-  </section>
-
-  <!-- SPRINGFIELD WORLD -->
-  <section id="world">
-    <div class="section-header">
-      <h2 class="section-title">Välkomna till Springfield</h2>
-      <p class="section-subtitle">Utforska stadens mest ikoniska platser</p>
-    </div>
-
-    <div class="locations-grid">
-      <div class="location-card" data-location="kwik-e-mart">
-        <div class="location-photo"><img src="images/loc-kwik.jpg" alt="Kwik-E-Mart" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="kwik-building">
-            <div class="kwik-roof"></div>
-            <div class="kwik-sign">KWIK-E-MART</div>
-            <div class="kwik-door"></div>
-          </div>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <div class="hero__copy" data-reveal>
+        <p class="eyebrow">Handgjord glass sedan 1986</p>
+        <h1 class="hero__title">Glassen som får<br>hela familjen<br>att <span class="squiggle">le</span></h1>
+        <p class="hero__lead">Krämig premiumglass på svensk ekologisk mjölk – utan konstgjorda färger eller smaker. Smaker för de små äventyrarna och de stora finsmakarna.</p>
+        <div class="hero__cta">
+          <a href="#smaker" class="btn btn--primary">Handla smaker</a>
+          <a href="#historia" class="btn btn--ghost">Vår historia</a>
         </div>
-        <h3>Kwik-E-Mart</h3>
-        <p>Apus livsmedelsbutik där du kan köpa Squishees, förskämt kött och överprissatta varor. "Thank you, come again!"</p>
+        <ul class="hero__chips">
+          <li>🌱 Ekologiskt</li>
+          <li>🐄 Svensk mjölk</li>
+          <li>🚫 Inga konstgjorda färger</li>
+        </ul>
       </div>
-
-      <div class="location-card" data-location="moes">
-        <div class="location-photo"><img src="images/loc-moes.jpg" alt="Moe's Tavern" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="moes-building">
-            <div class="moes-sign">MOE'S</div>
-            <div class="moes-door"></div>
-            <div class="beer-mug"></div>
-          </div>
+      <div class="hero__media" data-reveal>
+        <div class="hero__frame"><img class="kb" src="images/hero-colorful.jpg" alt="Färgglad glasstrut med blå och rosa kulor och regnbågsströssel" width="1100" height="1375" fetchpriority="high"></div>
+        <div class="hero__sticker">
+          <span>4,9</span><small>★★★★★<br>2 400+ omdömen</small>
         </div>
-        <h3>Moe's Tavern</h3>
-        <p>Springfields mest deprimerande bar, driven av den vresige Moe Szyslak. Hem för Duff-öl, Flaming Moe's och Barts telefonskämt.</p>
-      </div>
-
-      <div class="location-card" data-location="powerplant">
-        <div class="location-photo"><img src="images/loc-plant.jpg" alt="Springfields kärnkraftverk" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="plant-building">
-            <div class="plant-tower"></div>
-            <div class="plant-steam"></div>
-            <div class="radiation-symbol">&#9762;</div>
-          </div>
-        </div>
-        <h3>Karnkraftverket</h3>
-        <p>Springfield Nuclear Power Plant – där Homer "arbetar" som säkerhetsinspektör. Ägs av Mr. Burns, orsak till stadens trefingrade fiskar.</p>
-      </div>
-
-      <div class="location-card" data-location="school">
-        <div class="location-photo"><img src="images/loc-school.jpg" alt="Springfield Elementary" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="school-building">
-            <div class="school-bell"></div>
-            <div class="school-sign">ELEMENTARY</div>
-            <div class="school-door"></div>
-          </div>
-        </div>
-        <h3>Springfield Elementary</h3>
-        <p>Skolan där Bart och Lisa går. Med rektor Skinner, lärare som Mrs. Krabappel och cafeteriamat som ingen vill veta vad den innehåller.</p>
-      </div>
-
-      <div class="location-card" data-location="android">
-        <div class="location-photo"><img src="images/loc-android.jpg" alt="Android's Dungeon" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="android-building">
-            <div class="android-sign">ANDROID'S DUNGEON</div>
-            <div class="comic-book"></div>
-          </div>
-        </div>
-        <h3>Android's Dungeon</h3>
-        <p>Comic Book Guys serietidningsbutik. "Worst. Episode. Ever." är hans dom över allt som inte når upp till hans otroligt höga standard.</p>
-      </div>
-
-      <div class="location-card" data-location="742evergreen">
-        <div class="location-photo"><img src="images/loc-house.jpg" alt="742 Evergreen Terrace" loading="lazy" decoding="async" width="320" height="180" onerror="this.closest('.location-photo').style.display='none'"></div>
-        <div class="location-icon">
-          <div class="simpsons-house">
-            <div class="house-roof"></div>
-            <div class="house-body"></div>
-            <div class="house-door"></div>
-            <div class="house-window w1"></div>
-            <div class="house-window w2"></div>
-            <div class="house-garage"></div>
-          </div>
-        </div>
-        <h3>742 Evergreen Terrace</h3>
-        <p>Familjen Simpsons hem – där kaos, kärlek och D'oh! lever sida vid sida. Vardagsrummet med den ikoniska soffan är seriens hjärta.</p>
+        <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
+        <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
       </div>
     </div>
   </section>
 
-  <!-- GALLERY -->
-  <section id="gallery">
-    <div class="section-header">
-      <h2 class="section-title">Springfield i bilder</h2>
-      <p class="section-subtitle">Ikoniska ögonblick rakt ur serien</p>
-    </div>
-
-    <div class="gallery-grid">
-      <figure class="gallery-item wide">
-        <img src="images/gal-house.jpg" alt="742 Evergreen Terrace" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>742 Evergreen Terrace</figcaption>
-      </figure>
-      <figure class="gallery-item tall">
-        <img src="images/gal-lisa-sax.jpg" alt="Lisa spelar saxofon" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Lisa &amp; saxofonen</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-moes.jpg" alt="Moe's Tavern" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Moe's Tavern</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-burns.jpg" alt="Mr. Burns" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Mr. Burns</figcaption>
-      </figure>
-      <figure class="gallery-item wide">
-        <img src="images/gal-android.jpg" alt="Radioactive Man i Android's Dungeon" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Android's Dungeon</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-school.jpg" alt="Springfield Elementary skolband" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Springfield Elementary</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-bart.jpg" alt="Bart i klassrummet" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Bart i skolan</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-burns-smithers.jpg" alt="Burns och Smithers" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Burns &amp; Smithers</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <img src="images/gal-krusty.jpg" alt="Krusty the Clown" loading="lazy" decoding="async" width="640" height="360" onerror="this.style.display='none'">
-        <figcaption>Krusty the Clown</figcaption>
-      </figure>
+  <!-- USP BAR -->
+  <section class="usp" aria-label="Våra löften">
+    <div class="usp__inner">
+      <div class="usp__item" data-reveal><span class="usp__ic">🐄</span><div><strong>Svensk ekomjölk</strong><small>Från gårdar i Sörmland</small></div></div>
+      <div class="usp__item" data-reveal><span class="usp__ic">🌿</span><div><strong>Riktiga råvaror</strong><small>Inga konstgjorda färger</small></div></div>
+      <div class="usp__item" data-reveal><span class="usp__ic">❄️</span><div><strong>Fryst leverans</strong><small>Hela vägen hem</small></div></div>
+      <div class="usp__item" data-reveal><span class="usp__ic">💛</span><div><strong>Familjeägt</strong><small>Tre generationer</small></div></div>
     </div>
   </section>
 
-  <!-- BEST EPISODES -->
-  <section id="episodes">
-    <div class="section-header">
-      <h2 class="section-title">Legendariska Episoder</h2>
-      <p class="section-subtitle">De bästa avsnitten genom tiderna</p>
+  <!-- SHOP / SMAKER -->
+  <section class="shop section" id="smaker">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Vårt sortiment</p>
+      <h2 class="section__title">Smaker att bli kär i</h2>
+      <p class="section__sub">Från klassisk Madagaskarvanilj till barnens älskade Regnbåge – allt skopat med kärlek.</p>
     </div>
 
-    <div class="episodes-timeline">
-      <div class="timeline-line"></div>
-
-      <div class="episode-item left">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-monorail.jpg" alt="Scen ur Marge vs. the Monorail" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 4, Avsnitt 12</div>
-          <h3>Marge vs. the Monorail</h3>
-          <p>En klassisk musikalnummerdriven episod där en charmig bedragare övertygar Springfield att bygga en monorail. Skriven av Conan O'Brien – en absolut mästarklass i komedi.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="year">1993</span>
-          </div>
-        </div>
+    <div class="shop__toolbar" data-reveal>
+      <div class="filters" id="filters" role="tablist" aria-label="Filtrera smaker">
+        <button class="chip is-active" data-filter="alla">Alla</button>
+        <button class="chip" data-filter="klassiker">Klassiker</button>
+        <button class="chip" data-filter="barn">För barnen</button>
+        <button class="chip" data-filter="pinnglass">Pinnglass</button>
+        <button class="chip" data-filter="vegan">Veganskt</button>
+        <button class="chip" data-filter="bast">Bästsäljare</button>
       </div>
-
-      <div class="episode-item right">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-capefeare.jpg" alt="Scen ur Cape Feare" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 5, Avsnitt 2</div>
-          <h3>Cape Feare</h3>
-          <p>Sideshow Bob jagar Bart för att hämnas. En briljant parodi på Martin Scorseses Cape Fear, med den odödliga scenen där Bob kliver på krattor om och om igen.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="year">1993</span>
-          </div>
+      <div class="shop__tools">
+        <div class="shop__search">
+          <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="shop-search" placeholder="Sök smak…" aria-label="Sök i sortimentet">
         </div>
+        <select id="sort" class="select" aria-label="Sortera">
+          <option value="pop">Mest populära</option>
+          <option value="price-asc">Pris: lågt → högt</option>
+          <option value="price-desc">Pris: högt → lågt</option>
+          <option value="name">Namn A–Ö</option>
+        </select>
       </div>
+    </div>
 
-      <div class="episode-item left">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-thoh.jpg" alt="Scen ur Treehouse of Horror V" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 6, Avsnitt 6</div>
-          <h3>Treehouse of Horror V</h3>
-          <p>En av de bästa Halloween-specialerna någonsin. Innehåller "The Shinning" (en genial parodi), "Time and Punishment" och "Nightmare Cafeteria". Ren komisk briljans.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="year">1994</span>
-          </div>
-        </div>
+    <div class="product-grid" id="product-grid" aria-live="polite"></div>
+    <p class="shop__empty" id="shop-empty" hidden>Inga smaker matchade din sökning. 🍨</p>
+    <div class="shop__more-wrap" id="shop-more-wrap"><button class="btn btn--ghost shop__more" id="shop-more">Visa alla smaker</button></div>
+  </section>
+
+  <!-- FEATURE BANNER -->
+  <section class="feature" data-reveal>
+    <div class="feature__media"><img src="images/bowl.jpg" alt="Skål med pastellfärgade glasskulor och strössel" width="1300" height="900" loading="lazy"></div>
+    <div class="feature__copy">
+      <p class="eyebrow">Smakäventyr</p>
+      <h2>Kan inte välja?<br>Bygg din egen box.</h2>
+      <p>Plocka ihop sex favoriter i en frysbox – perfekt för fredagsmys, kalas eller att gömma längst bak i frysen (vi dömer inte).</p>
+      <a href="#box" class="btn btn--primary">Bygg din box</a>
+    </div>
+  </section>
+
+  <!-- BUILD YOUR OWN BOX -->
+  <section class="box section" id="box">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Bygg din box</p>
+      <h2 class="section__title">Sex kulor, ditt sätt</h2>
+      <p class="section__sub">Välj sex smaker så fryser vi in och skickar din personliga box för <strong>299 kr</strong>.</p>
+    </div>
+    <div class="box__wrap" data-reveal>
+      <div class="box__flavors" id="box-flavors"></div>
+      <aside class="box__cart">
+        <h3>Din box</h3>
+        <div class="box__slots" id="box-slots"></div>
+        <p class="box__hint" id="box-hint">Välj 6 smaker (du kan ta samma flera gånger).</p>
+        <div class="box__price"><span>Totalt</span><strong>299 kr</strong></div>
+        <button class="btn btn--primary btn--block" id="box-add" disabled>Lägg boxen i kundvagnen</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- SUBSCRIPTION / GLASSKLUBBEN -->
+  <section class="klubben section" id="klubben">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Glassklubben</p>
+      <h2 class="section__title">Glass i brevlådan, varje månad</h2>
+      <p class="section__sub">En frysbox med säsongens nyheter, klassiker och en överraskning – pausa eller avsluta när du vill.</p>
+    </div>
+    <div class="plans" data-reveal>
+      <article class="plan">
+        <h3>Lilla kulan</h3>
+        <p class="plan__price">199 kr<span>/mån</span></p>
+        <ul><li>4 kulor / månad</li><li>1 nyhet varje månad</li><li>Fri frakt</li><li>Pausa när du vill</li></ul>
+        <button class="btn btn--ghost" data-sub="Lilla kulan" data-price="199">Välj Lilla</button>
+      </article>
+      <article class="plan plan--featured">
+        <span class="plan__tag">Populärast</span>
+        <h3>Familjeboxen</h3>
+        <p class="plan__price">349 kr<span>/mån</span></p>
+        <ul><li>8 kulor / månad</li><li>2 nyheter + barnfavorit</li><li>Fri frakt</li><li>Receptkort till barnen</li><li>Pausa när du vill</li></ul>
+        <button class="btn btn--primary" data-sub="Familjeboxen" data-price="349">Välj Familjeboxen</button>
+      </article>
+      <article class="plan">
+        <h3>Storkalaset</h3>
+        <p class="plan__price">499 kr<span>/mån</span></p>
+        <ul><li>12 kulor / månad</li><li>Alla nyheter först</li><li>Fri frakt</li><li>10% på allt i butiken</li></ul>
+        <button class="btn btn--ghost" data-sub="Storkalaset" data-price="499">Välj Storkalaset</button>
+      </article>
+    </div>
+  </section>
+
+  <!-- STORY / VÅR HISTORIA -->
+  <section class="story section" id="historia">
+    <div class="story__inner">
+      <div class="story__media" data-reveal>
+        <img src="images/about.jpg" alt="Glassdisk med många färgglada smaker" width="1200" height="900" loading="lazy">
+        <div class="story__badge"><strong>Sedan</strong><span>1986</span></div>
       </div>
-
-      <div class="episode-item right">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-grimes.jpg" alt="Scen ur Homer's Enemy" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 8, Avsnitt 23</div>
-          <h3>Homer's Enemy</h3>
-          <p>Frank Grimes, en hårt arbetande man, försöker avslöja Homer som den inkompetenta idiot han är – men alla älskar Homer ändå. En mörkt briljant satir över den amerikanska drömmen.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="year">1997</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="episode-item left">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-scorpio.jpg" alt="Scen ur You Only Move Twice" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 8, Avsnitt 2</div>
-          <h3>You Only Move Twice</h3>
-          <p>Homer får drömjobbet hos den trevliga Hank Scorpio – som visar sig vara en Bond-skurk. En perfekt balans av hjärta och humor, med en av seriens bästa bifigurer någonsin.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span class="year">1996</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="episode-item right">
-        <div class="episode-content">
-          <div class="episode-thumb"><img src="images/ep-homerpalooza.jpg" alt="Scen ur Homerpalooza" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.episode-thumb').style.display='none'"></div>
-          <div class="episode-season">Säsong 7, Avsnitt 24</div>
-          <h3>Homerpalooza</h3>
-          <p>Homer försöker bevisa att han fortfarande är cool genom att gå på musikfestival. Han blir kanonkuls-attraktion. Med gästframträdanden av Cypress Hill, Sonic Youth och Smashing Pumpkins.</p>
-          <div class="episode-rating">
-            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-            <span class="year">1996</span>
-          </div>
-        </div>
+      <div class="story__copy" data-reveal>
+        <p class="eyebrow">Vår historia</p>
+        <h2>Det började med en handvev<br>och en dröm</h2>
+        <p>1986 vevade farmor Elsa sin första sats vaniljglass i ett litet kök i Sörmland. Receptet var enkelt: riktig grädde, riktiga råvaror och tålamod. Idag gör tredje generationen glassen på precis samma sätt – bara lite fler smaker.</p>
+        <p>Vi tror att den bästa glassen är den man delar. Därför gör vi smaker som barnen jublar över <em>och</em> som föräldrarna i smyg tar en extra skopa av.</p>
+        <ul class="story__values">
+          <li><span>🌱</span><div><strong>Inga konstgjorda färger</strong>Färgen kommer från riktig frukt och bär.</div></li>
+          <li><span>🥛</span><div><strong>Svensk ekologisk mjölk</strong>Från kossor som får beta fritt.</div></li>
+          <li><span>📋</span><div><strong>Tydlig innehållsförteckning</strong>Allergener märkta på varje förpackning.</div></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- GAMES -->
-  <section id="games">
-    <div class="section-header">
-      <h2 class="section-title">Simpsons Spelen</h2>
-      <p class="section-subtitle">Från arkad till konsol – de bästa Simpsons-spelen</p>
+  <!-- REVIEWS -->
+  <section class="reviews section" id="recensioner">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Älskad av familjer</p>
+      <h2 class="section__title">4,9 av 5 i snitt</h2>
+      <p class="section__sub">Från över 2 400 omdömen – här är några favoriter.</p>
     </div>
-
-    <div class="games-showcase">
-      <div class="game-card featured">
-        <div class="game-visual">
-          <div class="game-screen">
-            <img src="images/game-hitrun.jpg" alt="Springfield-gata ur The Simpsons – Hit & Run-stil" loading="lazy" decoding="async" width="400" height="250" onerror="this.style.display='none'">
-          </div>
-          <div class="game-badge">KLASSIKER</div>
-        </div>
-        <div class="game-info">
-          <h3>The Simpsons: Hit & Run</h3>
-          <span class="game-year">2003</span>
-          <p>Det ultimata Simpsons-spelet! Ofta kallat "Simpsons GTA" – ett öppet världsspel där du kör runt i Springfield, gör uppdrag och förstör stan. Älskat av fans och anses vara ett av de bästa licensierade spelen någonsin.</p>
-          <div class="game-platforms">PS2 / Xbox / GameCube / PC</div>
-          <div class="game-rating-bar">
-            <div class="rating-fill" style="--rating: 92%"></div>
-            <span>9.2/10</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="games-grid">
-        <div class="game-card mini">
-          <div class="game-mini-visual arcade-style"></div>
-          <h4>The Simpsons Arcade</h4>
-          <span class="game-year">1991</span>
-          <p>Konamis klassiska beat 'em up-arkadspel. Välj Homer, Marge, Bart eller Lisa och slåss genom Springfield för att rädda Maggie från Smithers!</p>
-          <div class="game-platforms">Arkad</div>
-        </div>
-
-        <div class="game-card mini">
-          <div class="game-mini-visual road-rage-style"></div>
-          <h4>Road Rage</h4>
-          <span class="game-year">2001</span>
-          <p>Crazy Taxi fast med Simpsons! Kör som dina favoritkaraktärer genom Springfield och skjutsa passagerare för pengar. Kaotiskt och roligt!</p>
-          <div class="game-platforms">PS2 / Xbox / GBA</div>
-        </div>
-
-        <div class="game-card mini">
-          <div class="game-mini-visual tapped-style"></div>
-          <h4>Tapped Out</h4>
-          <span class="game-year">2012</span>
-          <p>Homer förstörde Springfield (igen) och det är ditt jobb att bygga upp staden på nytt! Ett populärt mobilspel med ständiga uppdateringar och events.</p>
-          <div class="game-platforms">iOS / Android</div>
-        </div>
-
-        <div class="game-card mini">
-          <div class="game-mini-visual virtual-style"></div>
-          <h4>Virtual Springfield</h4>
-          <span class="game-year">1997</span>
-          <p>Utforska Springfield i 360 grader! Ett unikt PC-spel där du fritt kan vandra runt i staden och upptäcka hemligheter, easter eggs och roliga detaljer.</p>
-          <div class="game-platforms">PC / Mac</div>
-        </div>
-      </div>
+    <div class="reviews__grid">
+      <figure class="review" data-reveal>
+        <div class="stars">★★★★★</div>
+        <blockquote>"Mina barn ber om 'lyckoglass' varje fredag. Att den dessutom är ekologisk gör mig som förälder lugn."</blockquote>
+        <figcaption><span class="avatar" style="--a:var(--hallon)">MA</span> Maria, tvåbarnsmamma</figcaption>
+      </figure>
+      <figure class="review" data-reveal>
+        <div class="stars">★★★★★</div>
+        <blockquote>"Saltkola & nougat är det godaste jag ätit. Boxen kom stenhård och fryst trots värmeböljan."</blockquote>
+        <figcaption><span class="avatar" style="--a:var(--mynta-deep)">JO</span> Johan, finsmakare</figcaption>
+      </figure>
+      <figure class="review" data-reveal>
+        <div class="stars">★★★★★</div>
+        <blockquote>"Regnbågen är ren magi för en sexåring. Och inga konstiga färgämnen – tack!"</blockquote>
+        <figcaption><span class="avatar" style="--a:var(--lavender-deep)">SA</span> Sara, förskollärare</figcaption>
+      </figure>
+      <figure class="review" data-reveal>
+        <div class="stars">★★★★★</div>
+        <blockquote>"Glassklubben är veckans höjdpunkt. Älskar att vi får en nyhet varje månad."</blockquote>
+        <figcaption><span class="avatar" style="--a:var(--jordgubb)">PE</span> Petra & familjen</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- QUOTES -->
-  <section id="quotes">
-    <div class="section-header">
-      <h2 class="section-title">Odödliga Citat</h2>
-      <p class="section-subtitle">Visdom (och dumhet) från Springfield</p>
+  <!-- STORE LOCATOR -->
+  <section class="locator section" id="hittaoss">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Hitta oss</p>
+      <h2 class="section__title">Skopbarer & ombud</h2>
+      <p class="section__sub">Besök en av våra skopbarer – eller få glassen hemskickad i hela Sverige.</p>
     </div>
-
-    <div class="quotes-carousel" id="quotes-carousel">
-      <div class="quote-card active">
-        <blockquote>
-          <p>"To alcohol! The cause of, and solution to, all of life's problems."</p>
-          <cite>- Homer Simpson</cite>
-        </blockquote>
+    <div class="locator__wrap" data-reveal>
+      <div class="locator__map">
+        <div class="locator__mapview" id="map"></div>
+        <span class="map__label">🇸🇪 Levererar i hela landet</span>
       </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"I'm not gonna lie to you, Marge. See ya later!"</p>
-          <cite>- Homer Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"Don't have a cow, man!"</p>
-          <cite>- Bart Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"I am so smart! S-M-R-T... I mean S-M-A-R-T!"</p>
-          <cite>- Homer Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"The lesson is: never try."</p>
-          <cite>- Homer Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"I didn't do it. Nobody saw me do it. You can't prove anything."</p>
-          <cite>- Bart Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"If something's hard to do, then it's not worth doing."</p>
-          <cite>- Homer Simpson</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"Excellent..."</p>
-          <cite>- Mr. Burns</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"Hi-diddly-ho, neighborinos!"</p>
-          <cite>- Ned Flanders</cite>
-        </blockquote>
-      </div>
-      <div class="quote-card">
-        <blockquote>
-          <p>"Me fail English? That's unpossible!"</p>
-          <cite>- Ralph Wiggum</cite>
-        </blockquote>
-      </div>
-    </div>
-    <div class="quote-nav">
-      <button class="quote-btn" id="prev-quote">&larr;</button>
-      <button class="quote-btn" id="next-quote">&rarr;</button>
+      <ul class="locator__list">
+        <li><strong>Stockholm</strong><span>Götgatan 12 · Öppet 11–21</span></li>
+        <li><strong>Göteborg</strong><span>Magasinsgatan 4 · Öppet 11–21</span></li>
+        <li><strong>Malmö</strong><span>Lilla Torg 7 · Öppet 11–20</span></li>
+        <li><strong>Sörmland (gården)</strong><span>Lyckhem, Vagnhärad · Helger 10–17</span></li>
+      </ul>
     </div>
   </section>
 
-  <!-- TRIVIA -->
-  <section id="trivia">
-    <div class="section-header">
-      <h2 class="section-title">Visste du att...?</h2>
-      <p class="section-subtitle">Fascinerande fakta om The Simpsons</p>
+  <!-- FAQ -->
+  <section class="faq section" id="faq">
+    <div class="section__head" data-reveal>
+      <p class="eyebrow eyebrow--center">Vanliga frågor</p>
+      <h2 class="section__title">Bra att veta</h2>
     </div>
-
-    <div class="trivia-grid">
-      <div class="trivia-card">
-        <div class="trivia-number">01</div>
-        <h4>Längsta serien någonsin</h4>
-        <p>The Simpsons är den längst pågående amerikanska animerade primetime-serien och sitcom, med över 750 avsnitt sedan starten 1989.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">02</div>
-        <h4>Fyra fingrar</h4>
-        <p>Karaktärerna har bara fyra fingrar på varje hand. Matt Groening valde detta för att det var lättare att animera och såg roligare ut.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">03</div>
-        <h4>Framtiden förutspådd</h4>
-        <p>Serien har "förutspått" många verkliga händelser, inklusive Disneys köp av Fox, smartklockor, autokorrigering och Trumps presidentskap.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">04</div>
-        <h4>Gul färg</h4>
-        <p>Matt Groening valde gult för karaktärerna för att de skulle sticka ut när man zappade förbi. Han ville att tittarna omedelbart skulle känna igen serien.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">05</div>
-        <h4>Springfield – var?</h4>
-        <p>Springfield är medvetet aldrig placerat i någon specifik delstat. Det finns över 30 platser som heter Springfield i USA, så alla kan känna att det är "deras" stad.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">06</div>
-        <h4>Guldsöndag</h4>
-        <p>Seriens första avsnitt som fullängdsserie sändes den 17 december 1989. Innan dess var The Simpsons korta inslag i The Tracey Ullman Show sedan 1987.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">07</div>
-        <h4>D'oh! i ordboken</h4>
-        <p>Homers uttryck "D'oh!" lades till i Oxford English Dictionary år 2001. Det definieras som ett utrop för frustration.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">08</div>
-        <h4>Couch Gag rekord</h4>
-        <p>Den längsta couch gag någonsin varade över 2 minuter och skapades av graffitikonstnären Banksy, som visade en mörk bild av animationsindustrin.</p>
-      </div>
-      <div class="trivia-card">
-        <div class="trivia-number">09</div>
-        <h4>Flest gäststjärnor</h4>
-        <p>The Simpsons innehar Guinness-rekordet för flest gäststjärnor i en TV-serie – allt från Paul McCartney och Michael Jackson till Lady Gaga och Stephen Hawking har gästat Springfield.</p>
-      </div>
+    <div class="faq__list" data-reveal>
+      <details class="faq__item"><summary>Hur håller sig glassen fryst under leveransen?<span class="faq__plus"></span></summary><p>Vi packar varje order i en återvinningsbar fryskartong med torris. Glassen håller sig stenhård i upp till 36 timmar – långt mer än vad leveransen tar.</p></details>
+      <details class="faq__item"><summary>Var hittar jag allergeninformation?<span class="faq__plus"></span></summary><p>Varje produkt har en innehållsförteckning med allergener tydligt märkta. Klicka på "Snabbvy" på en smak för att se allergener direkt, eller läs på förpackningen.</p></details>
+      <details class="faq__item"><summary>Finns det veganska och laktosfria smaker?<span class="faq__plus"></span></summary><p>Ja! Våra sorbeter och flera krämiga smaker är helt växtbaserade. Filtrera på "Veganskt" i sortimentet för att se alla.</p></details>
+      <details class="faq__item"><summary>Kan jag pausa eller avsluta Glassklubben?<span class="faq__plus"></span></summary><p>När som helst, utan bindningstid. Du styr allt själv – pausa över sommaren eller avsluta med ett klick.</p></details>
+      <details class="faq__item"><summary>Vilka betalsätt accepterar ni?<span class="faq__plus"></span></summary><p>Kort, Swish, Klarna och Apple/Google Pay. (Detta är en demosida – ingen riktig betalning sker.)</p></details>
     </div>
   </section>
 
-  <!-- COUCH GAG / INTERACTIVE -->
-  <section id="couch-gag">
-    <div class="section-header">
-      <h2 class="section-title">Soffgaget</h2>
-      <p class="section-subtitle">Klicka för att se familjen springa till soffan!</p>
-    </div>
-    <div class="couch-scene">
-      <div class="living-room-bg">
-        <div class="lr-wall"></div>
-        <div class="lr-floor"></div>
-        <div class="lr-painting"></div>
-        <div class="lr-lamp"></div>
-      </div>
-      <div class="the-couch">
-        <div class="couch-back"></div>
-        <div class="couch-seat"></div>
-        <div class="couch-arm left-arm"></div>
-        <div class="couch-arm right-arm"></div>
-      </div>
-      <div class="couch-runners">
-        <div class="runner homer-runner" data-runner="homer"></div>
-        <div class="runner marge-runner" data-runner="marge"></div>
-        <div class="runner bart-runner" data-runner="bart"></div>
-        <div class="runner lisa-runner" data-runner="lisa"></div>
-        <div class="runner maggie-runner" data-runner="maggie"></div>
-      </div>
-      <div class="couch-reveal" id="couch-reveal">
-        <img src="images/couch-family.jpg" alt="Familjen Simpson samlad i soffan" loading="lazy" decoding="async" width="640" height="360" onerror="this.closest('.couch-reveal').style.display='none'">
-        <span class="couch-caption">…och så är familjen samlad! 📺</span>
-      </div>
-      <button class="couch-btn" id="couch-btn">Starta soffgaget!</button>
+  <!-- NEWSLETTER -->
+  <section class="newsletter" data-reveal>
+    <div class="newsletter__inner">
+      <h2>Gå med i Lyckoklubben</h2>
+      <p>Få 10% på första beställningen, nyheter före alla andra och en gratis kula på födelsedagen. 🎂</p>
+      <form class="newsletter__form" id="newsletter-form">
+        <input type="email" required placeholder="Din e-post" aria-label="E-post">
+        <button class="btn btn--primary" type="submit">Ge mig 10%</button>
+      </form>
+      <small>Inga spam-mejl, bara glass. Avsluta när du vill.</small>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer id="footer">
-    <div class="footer-content">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <h3>Springfield Fanzonen</h3>
-          <p>En fansida skapad med kärlek för The Simpsons. Alla rättigheter tillhör 20th Century Fox / Disney.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Snabblänkar</h4>
-          <ul>
-            <li><a href="#characters">Karaktärer</a></li>
-            <li><a href="#world">Springfield</a></li>
-            <li><a href="#episodes">Episoder</a></li>
-            <li><a href="#games">Spelen</a></li>
-          </ul>
-        </div>
-        <div class="footer-fun">
-          <h4>Homers visdom</h4>
-          <p class="footer-quote">"Operator! Give me the number for 911!"</p>
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="#top" class="logo logo--footer">
+          <span class="logo__scoop" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="30" height="30"><path d="M14 22 L24 44 L34 22 Z" fill="#E8B07A"/><circle cx="24" cy="19" r="13" fill="var(--hallon)"/><circle cx="16" cy="15" r="8" fill="var(--mynta)"/><circle cx="31" cy="16" r="7" fill="var(--lavender)"/></svg>
+          </span>
+          <span class="logo__text">Lyckokulan</span>
+        </a>
+        <p>Handgjord premiumglass på svensk ekologisk mjölk. Skopat med kärlek sedan 1986.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram" class="icon-btn"><svg viewBox="0 0 24 24" class="ic"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Facebook" class="icon-btn"><svg viewBox="0 0 24 24" class="ic"><path d="M15 8h-2a2 2 0 0 0-2 2v2H9v3h2v6h3v-6h2.2l.8-3H14v-1.5a.5.5 0 0 1 .5-.5H17V8z"/></svg></a>
+          <a href="#" aria-label="TikTok" class="icon-btn"><svg viewBox="0 0 24 24" class="ic"><path d="M16 3c.3 2.3 1.8 3.9 4 4.2v3c-1.5 0-2.9-.5-4-1.3V15a6 6 0 1 1-6-6c.3 0 .7 0 1 .1v3.1a3 3 0 1 0 2 2.8V3h3z"/></svg></a>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Springfield Fanzonen. Inte affilierad med Fox eller Disney. Skapad av fans, för fans. Skärmbilder via <a href="https://frinkiac.com" target="_blank" rel="noopener">Frinkiac</a>.</p>
-        <div class="donut-footer">&#127849;</div>
+      <div class="footer__col">
+        <h4>Handla</h4>
+        <ul>
+          <li><a href="#smaker">Alla smaker</a></li>
+          <li><a href="#box">Bygg din box</a></li>
+          <li><a href="#klubben">Glassklubben</a></li>
+          <li><a href="#smaker">Presentkort</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Om oss</h4>
+        <ul>
+          <li><a href="#historia">Vår historia</a></li>
+          <li><a href="#hittaoss">Hitta oss</a></li>
+          <li><a href="#recensioner">Omdömen</a></li>
+          <li><a href="#historia">Hållbarhet</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Hjälp</h4>
+        <ul>
+          <li><a href="#faq">Frågor &amp; svar</a></li>
+          <li><a href="#faq">Leverans</a></li>
+          <li><a href="#faq">Allergener</a></li>
+          <li><a href="#newsletter-form">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="perf">
+        <span class="perf__label">⚡ Effektnivå</span>
+        <div class="perf__seg" role="group" aria-label="Välj effektnivå">
+          <button type="button" data-perf-set="lite">Lite</button>
+          <button type="button" data-perf-set="standard">Standard</button>
+          <button type="button" data-perf-set="full">Full</button>
+        </div>
+        <span class="perf__hint">Sänk om sidan känns seg</span>
+      </div>
+      <p>© 2026 Lyckokulan. Påhittat varumärke – demosida utan riktig butik eller betalning.</p>
+      <div class="footer__pay" aria-label="Betalsätt">
+        <span>Visa</span><span>Mastercard</span><span>Swish</span><span>Klarna</span>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+  <!-- BACK TO TOP -->
+  <button class="to-top" id="to-top" aria-label="Till toppen">↑</button>
+
+  <!-- CART DRAWER -->
+  <div class="drawer-overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="cart-drawer" aria-label="Kundvagn" aria-hidden="true">
+    <div class="drawer__head">
+      <h2>Din kundvagn</h2>
+      <button class="icon-btn" id="cart-close" aria-label="Stäng">✕</button>
+    </div>
+    <div class="ship-progress" id="ship-progress">
+      <div class="ship-progress__bar"><span id="ship-fill"></span></div>
+      <p id="ship-text"></p>
+    </div>
+    <div class="drawer__body" id="cart-items"></div>
+    <div class="drawer__empty" id="cart-empty">
+      <p>🍨</p><p>Din kundvagn är tom.</p>
+      <button class="btn btn--ghost" id="cart-empty-shop">Utforska smaker</button>
+    </div>
+    <div class="drawer__foot" id="cart-foot">
+      <div class="discount">
+        <input id="discount-input" placeholder="Rabattkod (LYCKA10)" aria-label="Rabattkod">
+        <button class="btn btn--ghost btn--sm" id="discount-apply">Använd</button>
+      </div>
+      <div class="drawer__discount" id="discount-line" hidden><span id="discount-label">Rabatt</span><span id="discount-amt">−0 kr</span></div>
+      <div class="drawer__sub"><span>Delsumma</span><strong id="cart-subtotal">0 kr</strong></div>
+      <button class="btn btn--primary btn--block" id="checkout-btn">Till kassan</button>
+      <p class="drawer__note">Fri frakt över 499 kr · 14 dagars öppet köp</p>
+    </div>
+  </aside>
+
+  <!-- WISHLIST DRAWER -->
+  <aside class="drawer" id="wishlist-drawer" aria-label="Önskelista" aria-hidden="true">
+    <div class="drawer__head">
+      <h2>Önskelista</h2>
+      <button class="icon-btn" id="wishlist-close" aria-label="Stäng">✕</button>
+    </div>
+    <div class="drawer__body" id="wishlist-items"></div>
+    <div class="drawer__empty" id="wishlist-empty">
+      <p>💛</p><p>Inga favoriter än.</p>
+      <button class="btn btn--ghost" id="wishlist-empty-shop">Hitta favoriter</button>
+    </div>
+  </aside>
+
+  <!-- QUICK VIEW MODAL -->
+  <div class="modal" id="quickview" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__card modal__card--pdp" id="quickview-card"></div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal" id="checkout-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__card modal__card--narrow" id="checkout-card"></div>
+  </div>
+
+  <!-- DISCOUNT POPUP -->
+  <div class="popup" id="popup" aria-hidden="true">
+    <div class="popup__card">
+      <button class="popup__close" id="popup-close" aria-label="Stäng">✕</button>
+      <div class="popup__emoji">🍦</div>
+      <h2>Smaka för 10% mindre</h2>
+      <p>Gå med i Lyckoklubben och få <strong>10% rabatt</strong> på din första box.</p>
+      <form id="popup-form" class="popup__form">
+        <input type="email" required placeholder="Din e-post" aria-label="E-post">
+        <button class="btn btn--primary" type="submit">Hämta min kod</button>
+      </form>
+      <button class="popup__skip" id="popup-skip">Nej tack, jag betalar fullpris</button>
+    </div>
+  </div>
+
+  <!-- COOKIE CONSENT -->
+  <div class="cookie" id="cookie" hidden>
+    <p>Vi använder kakor för att glassupplevelsen ska bli så len som möjligt. 🍪</p>
+    <div class="cookie__btns">
+      <button class="btn btn--ghost btn--sm" id="cookie-deny">Endast nödvändiga</button>
+      <button class="btn btn--primary btn--sm" id="cookie-accept">Acceptera alla</button>
+    </div>
+  </div>
+
+  <!-- TOASTS -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

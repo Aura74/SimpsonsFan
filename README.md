@@ -1,6 +1,8 @@
-# Springfield Fanzonen — The Simpsons
+# Lyckokulan — Premium glass-e-handel (demo)
 
-En interaktiv svensk fansajt om The Simpsons: karaktärer, ikoniska platser, ett bildgalleri med riktiga skärmdumpar, legendariska avsnitt, spel, citat, trivia och en interaktiv soffgag. Premium-känsla men medvetet lättviktig — fungerar fint även på äldre/svagare datorer.
+> **Obs:** Mappen heter fortfarande `SimpsonsFan` av historiska skäl. Innehållet är sedan 2026 ombyggt till **Lyckokulan**, ett påhittat premium-glassföretag. Den gamla Simpsons-fansajten finns bevarad i git-taggen **`simpsons-fan-v1`**.
+
+En fullständig, premium e-handelssida för ett påhittat glassföretag som vänder sig till **barn och föräldrar**. Helt utan backend — all "butikslogik" körs i webbläsaren med `localStorage`. Byggd för att kännas lyxig men vara lättdriven även på äldre datorer.
 
 ---
 
@@ -9,124 +11,102 @@ En interaktiv svensk fansajt om The Simpsons: karaktärer, ikoniska platser, ett
 | Del | Val |
 |---|---|
 | **Struktur** | Vanilla HTML/CSS/JS (inga ramverk, ingen build) |
-| **Animationer** | GSAP 3.12.5 + ScrollTrigger + TextPlugin (CDN) |
-| **Typografi** | Bangers (rubriker), Permanent Marker (handskrivet/citat), Nunito (brödtext), Comic Neue (fallback) |
-| **Bilder** | Riktiga seriebildrutor via [Frinkiac](https://frinkiac.com), nedladdade lokalt till `images/` |
-| **Ikoner** | Inga — karaktärer & byggnader är helt CSS-ritade |
-
-### CDN-inkludering (i botten av `<body>`)
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
-<script src="script.js"></script>
-```
+| **Animation** | Ren CSS + `IntersectionObserver` (inga tunga bibliotek) |
+| **Typografi** | Fredoka (display), Nunito (brödtext), Caveat (accent) |
+| **Bilder** | Riktiga foton från Unsplash, **nedladdade lokalt** till `images/` (~1,4 MB) |
+| **Ikoner** | Inline-SVG (inga CDN-beroenden) |
+| **State** | `localStorage` (kundvagn, önskelista, tema, cookies) |
 
 ---
 
 ## Project Structure
 
 ```
-SimpsonsFan/
-├── index.html      # Hela enkelsidan, alla sektioner inline
-├── styles.css      # All styling, tema-variabler, responsiv design
-├── script.js       # GSAP-animationer, karuseller, tema-toggle, perf-läge
-├── images/         # 28 lokala seriebildrutor (Frinkiac), ~576 KB totalt
-│   ├── char-*.jpg  # karaktärsfoton (Homer/Marge/Bart/Krusty; Lisa/Burns delar gal-)
-│   ├── loc-*.jpg   # 6 platsfoton
-│   ├── ep-*.jpg    # 6 avsnittsbilder (timeline)
-│   ├── gal-*.jpg   # 9 galleribilder
-│   ├── game-*.jpg  # spelbild (Hit & Run)
-│   └── couch-*.jpg # "familjen i soffan"-payoff
+SimpsonsFan/                (mappnamn oförändrat – innehåll = Lyckokulan)
+├── index.html      # Hela enkelsidan: nav, hero, butik, drawers, modaler
+├── styles.css      # Pastell gelato-designsystem, dark mode, alla komponenter
+├── script.js       # Webshop-logik (IIFE): produkter, kundvagn, önskelista, filter, sök, quick-view, box-byggare, kassa
+├── images/         # 14 lokala foton: hero, bowl, about, joy + 10 prod-*.jpg
 └── README.md
 ```
 
 ---
 
-## Sektioner
+## Sektioner & funktioner
 
-| # | Sektion | Beskrivning |
+| # | Sektion | Funktion |
 |---|---|---|
-| 1 | Loader | Munk-spinner ("Laddar Springfield…") |
-| 2 | Navigation | Fast glas-nav, hamburger på mobil, länk till Galleri |
-| 3 | Hero | Himmel + moln (parallax) + CSS-skyline med kraftverk |
-| 4 | Karaktärer | 8 kort med 3D-flip + karusell. 6 har riktiga foton; Maggie & Ned har CSS-avatar (inga solo-bildrutor finns) |
-| 5 | Springfield | 6 platskort med riktiga foton + tilt-effekt |
-| 6 | **Galleri** | **NYTT** — "Springfield i bilder", 9 riktiga skärmdumpar i editoriellt rutnät |
-| 7 | Episoder | Tidslinje med 6 avsnitt — **nu med riktig skärmdump per kort** |
-| 8 | Spel | Featured (Hit & Run) med riktig bild + 4 retro mini-kort |
-| 9 | Citat | Autoplay-karusell, 10 citat (`.quotes-carousel` kräver `width:100%`) |
-| 10 | Trivia | 9 faktakort med räknaranimation |
-| 11 | Soffgaget | Couch gag — familjen springer fram, sedan tonas en riktig "familjen i soffan"-bild in |
-| 12 | Footer | Brand, snabblänkar, Frinkiac-attribution |
+| 1 | Announcement-bar | Fri frakt / rabattkod, stängbar (sparas i localStorage) |
+| 2 | Glas-header | Sticky, logga, nav, **sök**, **önskelista**, **kundvagn** (med antal), **tema-toggle**, hamburger |
+| 3 | Hero | Värdeerbjudande, CTA, trust-chips, lifestyle-foto, betyg-sticker |
+| 4 | USP-bar | Ekomjölk · Riktiga råvaror · Fryst leverans · Familjeägt |
+| 5 | **Butik (Smaker)** | 10 produkter renderade från JS · filter (Alla/Klassiker/Barn/Pinnglass/Veganskt/Bästsäljare) · sortering · sök · betyg · badges |
+| 6 | Produktkort | Quick-add, önskelista-hjärta, **Snabbvy**-modal (allergener, innehåll, förvaring) |
+| 7 | Feature-banner | "Bygg din egen box" |
+| 8 | **Box-byggaren** | Välj 6 smaker → lägg i kundvagn (299 kr) — interaktivt, kul för barn |
+| 9 | **Glassklubben** | 3 prenumerationsplaner → lägg i kundvagn |
+| 10 | Vår historia | Varumärkesberättelse + värden för föräldrar (inga konstgjorda färger m.m.) |
+| 11 | Recensioner | 4,9/5, omdömen från föräldrar |
+| 12 | Hitta oss | Skopbarer + stiliserad karta |
+| 13 | FAQ | `<details>`-dragspel |
+| 14 | Nyhetsbrev | 10%-rabatt-signup |
+| 15 | Footer | 4 kolumner, social, betalsätt |
+| – | **Kundvagn (drawer)** | Antal +/−, ta bort, **fri frakt-mätare**, fejk-kassa (kvitto-modal) |
+| – | **Önskelista (drawer)** | Spara favoriter, flytta till kundvagn |
+| – | Rabatt-popup | Visas efter 9 s (en gång, localStorage) |
+| – | Cookie-banner · Toasts · Till-toppen | Standard premium-detaljer |
 
 ---
 
-## Design system
+## Design system — Pastell Gelato
 
-- **Färger:** Simpsons-gult (`#FED41D`) som accent, himmelsblått, Marge-blått, donut-rosa m.fl.
-- **Tema:** Mörkt som standard + fullt **ljust läge** via `:root[data-theme="light"]`. Allt styrs av semantiska CSS-variabler (`--surface`, `--deep`, `--text-soft`, `--hairline`, `--shadow-card` …) så båda lägena fungerar.
-- **Skuggor:** Tonade, flerlagers (`--shadow-card` / `--shadow-card-hover`) — inte platt svart.
-- **Eyebrows:** Sektions-underrubriker har flankerande linjer (editoriell känsla).
-- **Glas-nav:** `backdrop-filter: blur(16px) saturate(140%)` vid scroll (stängs av i Lite-läge).
+| Token | Värde | Roll |
+|---|---|---|
+| `--mynta` | `#A8E6CF` | mynta |
+| `--jordgubb` | `#FF9AA2` | jordgubb |
+| `--hallon` | `#E5638D` | **accent / CTA** |
+| `--hallon-deep` | `#C2406B` | liten text (WCAG) / hover |
+| `--lavender` | `#C8B6E2` | lavendel |
+| `--bg` | `#FFF6E9` | varm gräddvit sida |
+| `--text` | `#3A2A3F` | bär-mörk text |
 
-### Dark/Light-toggle
-- Flytande sol/måne-knapp nere till höger (`.theme-toggle`).
-- Inline-script i `<head>` sätter `data-theme` **före paint** (ingen flash). Läser `localStorage['theme']`, faller tillbaka på `prefers-color-scheme`.
+- **Light = standard**, **Dark mode** via `:root[data-theme="dark"]` (djup plommonbakgrund). Tema sätts före paint i inline-script (`localStorage['theme']` → `prefers-color-scheme`).
+- Tonade flerlagers-skuggor, eyebrow-linjer, pill-knappar, mjuka radier (16–26px – lekfullt men polerat).
 
 ---
 
 ## How to Run
 
 ```
-# Öppna direkt:
-open index.html
-# eller med lokal server:
-npx serve .
+open index.html       # eller: npx serve .
 ```
-Inga beroenden att installera. Bilderna ligger lokalt — sidan kräver ingen internetanslutning (utom CDN för GSAP/typsnitt, som har fallbacks).
+Inga beroenden. Bilderna ligger lokalt → fungerar offline, inga "trasiga bilder"-problem.
 
 ---
 
-## Customization
+## "Skulle behöva en riktig tjänst" (om sidan gick live)
 
-| Vad | Var |
+| Funktion | Riktig tjänst att koppla in |
 |---|---|
-| Byt accentfärg / palett | `:root` i `styles.css` |
-| Justera ljust tema | `:root[data-theme="light"]` i `styles.css` |
-| Byt/lägg till bilder | `images/` + referenser i `index.html` (alla `<img>` har `onerror`-fallback) |
-| Lägg till galleribild | Kopiera en `.gallery-item` i `#gallery` |
-| Hämta nya seriebilder | Frinkiac-API: `https://frinkiac.com/api/search?q=<text>` → bild: `https://frinkiac.com/img/<Episode>/<Timestamp>/medium.jpg` |
+| Kassa & betalning | Stripe Checkout, Klarna, Swish Handel |
+| Prenumeration | Stripe Billing / Recharge |
+| Nyhetsbrev | Klaviyo, Mailchimp |
+| Riktiga omdömen | Trustpilot, Yotpo |
+| Produkt/lager | Shopify Storefront API, Snipcart |
+| Sök | Algolia / Typesense |
 
 ---
 
-## Prestanda (lättdriven på äldre datorer)
+## Prestanda (lättdriven)
 
-- **Auto / Lite-läge** via `data-perf="lite"` på `<html>`. Inline-script auto-detekterar svag hårdvara (kärnor ≤4, minne ≤4 GB, save-data).
-- **Runtime FPS-vakt:** mäter ~2,5 s efter load; vid < 40 FPS slås Lite-läge på automatiskt och sparas i `localStorage['simpsons:perfMode']` (CPU-detektering ensam missar svaga GPU:er).
-- **Lite-läge** stänger av: backdrop-blur, marquee/steam-animationer, location-shimmer m.m.
-- `prefers-reduced-motion` respekteras (nollar animationer, stänger av cursor-trail).
-- Bilder: `loading="lazy"`, `decoding="async"`, satta `width/height` (ingen layout-shift), lokala (~290 KB totalt).
-- Oanvänt `particles.js` borttaget.
+- Inga tunga bibliotek (ingen GSAP/jQuery). Reveals via `IntersectionObserver`.
+- `data-perf="lite"` auto-detektering (kärnor/minne/save-data) stänger av blur/animationer.
+- `prefers-reduced-motion` respekteras. Bilder `loading="lazy"` + satta `width/height` (ingen CLS).
 
----
+## Responsive
 
-## Mobile / Responsive
-
-- Breakpoints: **1200 / 1024 / 900 / 768 / 480**
-- Hamburger-meny < 768px (glas-panel som glider in).
-- Galleri: 4 kolumner → 2 på mobil.
-- Hero-rubrik och underrubrik skalar med `clamp()`; underrubrik kapad till `36ch` (ingen horisontell spill).
-- Touch/swipe i karaktärskarusellen.
-
----
+Breakpoints **1024 / 880 / 680 / 460**. Hamburger < 880px. Produktrutnät 4→3→2→2 kolumner. Drawers/modaler fyller skärmen snyggt på mobil.
 
 ## Browser support
 
-Chrome 90+, Firefox 88+, Safari 14+ (kräver stöd för CSS-variabler, `aspect-ratio`, `backdrop-filter`).
-
----
-
-## Krediter
-
-Seriebildrutor via **[Frinkiac](https://frinkiac.com)**. Fansida — inte affilierad med eller godkänd av 20th Century / Disney. The Simpsons © 20th Television.
+Chrome 90+, Firefox 88+, Safari 14+ (kräver CSS-variabler, `color-mix()`, `aspect-ratio`, `backdrop-filter`).
